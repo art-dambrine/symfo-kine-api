@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $patient = new Patient();
 
             $chrono = 1;

@@ -4,9 +4,15 @@ namespace App\Entity;
 
 use App\Repository\ExerciceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciceRepository::class)
+ * @ApiResource(
+ *     attributes={
+            "pagination_enabled"=true
+ *     }
+ * )
  */
 class Exercice
 {

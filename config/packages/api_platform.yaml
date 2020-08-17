@@ -5,3 +5,9 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    collection:
+        pagination:
+            # To enable or disable pagination for all resource collections by default.
+            enabled: false
+            items_per_page: 30
+            client_enabled: true
