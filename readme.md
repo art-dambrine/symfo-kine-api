@@ -29,6 +29,11 @@ $ composer require orm-fixtures fzaninotto/faker --dev
  ```
 # Etapes du developpement de l'application
 
+NOTE: Souvent en phase de dev pensez à vider le cache de votre application Symfony (cela vous evitera de chercher pour des erreurs qui n'existent pas)
+```
+php bin/console cache:clear
+```
+
 ## Etape 1 : Creation des entites symfony
 
 $ php bin/console make:entity

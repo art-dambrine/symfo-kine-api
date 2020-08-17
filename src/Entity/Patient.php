@@ -7,10 +7,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PatientRepository::class)
- * @ApiResource
+ * @ApiResource(
+ *     normalizationContext={
+ *          "groups"={"patients_read"}
+ *     }
+ * )
  */
 class Patient
 {
@@ -18,32 +23,49 @@ class Patient
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"patients_read", "exercices_read", "user_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"patients_read", "user_read"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"patients_read", "user_read"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"patients_read", "user_read"})
      */
     private $birthdate;
 
     /**
      * @ORM\OneToMany(targetEntity=Exercice::class, mappedBy="patient")
+     * @Groups({"patients_read"})
      */
     private $exercices;
 
     public function __construct()
     {
         $this->exercices = new ArrayCollection();
+    }
+
+    /**
+     * Recupère le nombre total de repetitions à réaliser par le patient
+     * @Groups({"patients_read"})
+     * @return int
+     */
+    public function getTotalRepetition(): int
+    {
+        return array_reduce($this->exercices->toArray(), function ($total, $exercice) {
+            return $total + $exercice->getNumberOf();
+        }, 0);
     }
 
     public function getId(): ?int

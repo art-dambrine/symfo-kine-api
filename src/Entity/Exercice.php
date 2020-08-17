@@ -5,12 +5,16 @@ namespace App\Entity;
 use App\Repository\ExerciceRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ExerciceRepository::class)
  * @ApiResource(
  *     attributes={
-            "pagination_enabled"=true
+ *          "pagination_enabled"=true
+ *     },
+ *     normalizationContext={
+ *           "groups"={"exercices_read"}
  *     }
  * )
  */
@@ -20,27 +24,33 @@ class Exercice
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"exercices_read", "patients_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"exercices_read", "patients_read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"exercices_read", "patients_read"})
      */
     private $numberOf;
 
     /**
      * @ORM\ManyToOne(targetEntity=Patient::class, inversedBy="exercices")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"exercices_read"})
      */
     private $patient;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"exercices_read", "patients_read"})
+     *
      */
     private $chrono;
 
