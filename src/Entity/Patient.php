@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PatientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,55 +22,96 @@ class Patient
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nom;
+    private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $prenom;
+    private $lastName;
 
     /**
      * @ORM\Column(type="date")
      */
-    private $date_naissance;
+    private $birthdate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Exercice::class, mappedBy="patient")
+     */
+    private $exercices;
+
+    public function __construct()
+    {
+        $this->exercices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->nom;
+        return $this->firstName;
     }
 
-    public function setNom(string $nom): self
+    public function setFirstName(string $firstName): self
     {
-        $this->nom = $nom;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
-    public function getPrenom(): ?string
+    public function getLastName(): ?string
     {
-        return $this->prenom;
+        return $this->lastName;
     }
 
-    public function setPrenom(string $prenom): self
+    public function setLastName(string $lastName): self
     {
-        $this->prenom = $prenom;
+        $this->lastName = $lastName;
 
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getBirthdate(): ?\DateTimeInterface
     {
-        return $this->date_naissance;
+        return $this->birthdate;
     }
 
-    public function setDateNaissance(\DateTimeInterface $date_naissance): self
+    public function setBirthdate(\DateTimeInterface $birthdate): self
     {
-        $this->date_naissance = $date_naissance;
+        $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Exercice[]
+     */
+    public function getExercices(): Collection
+    {
+        return $this->exercices;
+    }
+
+    public function addExercice(Exercice $exercice): self
+    {
+        if (!$this->exercices->contains($exercice)) {
+            $this->exercices[] = $exercice;
+            $exercice->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(Exercice $exercice): self
+    {
+        if ($this->exercices->contains($exercice)) {
+            $this->exercices->removeElement($exercice);
+            // set the owning side to null (unless already changed)
+            if ($exercice->getPatient() === $this) {
+                $exercice->setPatient(null);
+            }
+        }
 
         return $this;
     }
