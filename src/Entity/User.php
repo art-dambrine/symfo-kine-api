@@ -11,6 +11,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
+ *     collectionOperations={"GET"},
+ *     itemOperations={"GET"},
  *     normalizationContext={
             "groups"={"user_read"}
  *     }

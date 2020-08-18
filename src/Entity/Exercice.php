@@ -13,6 +13,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     attributes={
  *          "pagination_enabled"=true
  *     },
+ *     subresourceOperations={
+ *           "api_patients_exercices_get_subresource"={
+ *                  "normalization_context"={"groups"={"exercices_subresource"}}
+ *            }
+ *     },
+ *     itemOperations={"GET","PUT","DELETE","PATCH", "increment"={
+ *          "method"="POST",
+ *          "path"="/exercices/{id}/increment",
+ *          "controller"="App\Controller\ExerciceIncrementationController",
+ *          "openapi_context"={
+                "summary"="Incremente un exercice",
+ *              "description"="Incremente le chrono d'un exercice donnée"
+ *           }
+ *         }
+ *     },
  *     normalizationContext={
  *           "groups"={"exercices_read"}
  *     }
@@ -24,19 +39,19 @@ class Exercice
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"exercices_read", "patients_read"})
+     * @Groups({"exercices_read", "patients_read", "exercices_subresource"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"exercices_read", "patients_read"})
+     * @Groups({"exercices_read", "patients_read", "exercices_subresource"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"exercices_read", "patients_read"})
+     * @Groups({"exercices_read", "patients_read", "exercices_subresource"})
      */
     private $numberOf;
 

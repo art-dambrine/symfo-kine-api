@@ -8,10 +8,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 /**
  * @ORM\Entity(repositoryClass=PatientRepository::class)
  * @ApiResource(
+ *     subresourceOperations={
+ *          "exercices_get_subresource"={"path"="/patients/{id}/exercices"}
+ *     },
  *     normalizationContext={
  *          "groups"={"patients_read"}
  *     }
@@ -48,6 +52,7 @@ class Patient
     /**
      * @ORM\OneToMany(targetEntity=Exercice::class, mappedBy="patient")
      * @Groups({"patients_read"})
+     * @ApiSubresource
      */
     private $exercices;
 
