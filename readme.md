@@ -160,3 +160,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 https://symfony.com/doc/current/reference/constraints/NotBlank.html
 
+# Authentification JWT
+
+````
+composer require "lexik/jwt-authentication-bundle"
+````
