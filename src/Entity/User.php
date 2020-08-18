@@ -8,15 +8,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
- *     collectionOperations={"GET"},
+ *     collectionOperations={"GET","POST"},
  *     itemOperations={"GET"},
  *     normalizationContext={
             "groups"={"user_read"}
  *     }
  * )
+ *
+ * @UniqueEntity("username")
  */
 class User implements UserInterface
 {
@@ -43,6 +48,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Mot de passe obligatoire")
      */
     private $password;
 

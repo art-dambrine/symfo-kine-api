@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass=ExerciceRepository::class)
  * @ApiResource(
@@ -46,12 +48,14 @@ class Exercice
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"exercices_read", "patients_read", "exercices_subresource"})
+     * @Assert\NotBlank(message="Le nom de l'exercice doit être renseigné")
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"exercices_read", "patients_read", "exercices_subresource"})
+     * @Assert\Type(type="numeric", message="Le nombre de repetition doit être un numérique")
      */
     private $numberOf;
 

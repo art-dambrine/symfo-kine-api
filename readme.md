@@ -155,3 +155,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * )
  */
 ``` 
+
+## Validation des données
+
+https://symfony.com/doc/current/reference/constraints/NotBlank.html
+

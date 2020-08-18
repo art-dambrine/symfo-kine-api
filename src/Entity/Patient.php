@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass=PatientRepository::class)
  * @ApiResource(
@@ -18,7 +20,8 @@ use ApiPlatform\Core\Annotation\ApiSubresource;
  *     },
  *     normalizationContext={
  *          "groups"={"patients_read"}
- *     }
+ *     },
+ *     denormalizationContext={"disable_type_enforcement"=false}
  * )
  */
 class Patient
@@ -34,6 +37,8 @@ class Patient
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"patients_read", "user_read"})
+     * @Assert\NotBlank(message="Le prenom est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le prenom doit faire entre 3 et 255 char" , max="255", maxMessage="Le prenom doit faire entre 3 et 255 char")
      */
     private $firstName;
 
@@ -46,6 +51,7 @@ class Patient
     /**
      * @ORM\Column(type="date")
      * @Groups({"patients_read", "user_read"})
+     * @Assert\NotBlank(message="La date de naissance doit être renseignée")
      */
     private $birthdate;
 
