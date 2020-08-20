@@ -3,6 +3,7 @@
 namespace App\Events;
 
 
+use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
 class JwtCreatedSubscriber
@@ -15,14 +16,17 @@ class JwtCreatedSubscriber
     {
         // 1. Récupérer le patient lié à l'utilisateur (pour avoir son firstName et son lastName)
         $user = $event->getUser();
-        $patient = $user->getPatient();
 
-        // 2. Enrichir les data pour qu'elles contiennent ces données
-        $data = $event->getData();
-        $data['firstName'] = $patient->getFirstName();
-        $data['lastName'] = $patient->getLastName();
+        if ($user->getRoles()[0] === "ROLE_USER" && $user instanceof User) {
+            $patient = $user->getPatient();
 
-        $event->setData($data);
+            // 2. Enrichir les data pour qu'elles contiennent ces données
+            $data = $event->getData();
+            $data['firstName'] = $patient->getFirstName();
+            $data['lastName'] = $patient->getLastName();
+
+            $event->setData($data);
+        }
     }
 
 }
