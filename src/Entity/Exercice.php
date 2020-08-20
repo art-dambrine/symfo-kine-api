@@ -63,13 +63,14 @@ class Exercice
      * @ORM\ManyToOne(targetEntity=Patient::class, inversedBy="exercices")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"exercices_read"})
+     * @Assert\NotBlank(message="Le patient doit être renseigné")
      */
     private $patient;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"exercices_read", "patients_read"})
-     *
+     * @Assert\NotBlank(message="Le chrono doit être renseigné")
      */
     private $chrono;
 
