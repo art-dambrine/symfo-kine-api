@@ -57,7 +57,6 @@ class Patient
 
     /**
      * @ORM\OneToMany(targetEntity=Exercice::class, mappedBy="patient")
-     * @Groups({"patients_read"})
      * @ApiSubresource
      */
     private $exercices;
