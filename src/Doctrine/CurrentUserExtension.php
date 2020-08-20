@@ -7,6 +7,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
 use App\Entity\Exercice;
 use App\Entity\Patient;
+use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Security;
 
@@ -29,7 +30,7 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
         $user = $this->security->getUser();
 
         // Si on est dans le cas d'un utilisateur classique "ROLE_USER" on ne lui affichera que ses données personelles
-        if ($user->getRoles()[0] === "ROLE_USER") {
+        if ($user->getRoles()[0] === "ROLE_USER" && $user instanceof User) {
 
             $patientId = $user->getPatient()->getId();
 
