@@ -73,11 +73,22 @@ Encore
 
     // Enable Vuejs
     .enableVueLoader()
-;
+
+    // ESlint
+
+    .enableEslintLoader(() => {}, {
+      // lint `.vue` files
+      lintVue: true
+    })
+    ;
 
     Encore.configureDefinePlugin(options => {
         options["process.env"].VUE_APP_API_URL = process.env.VUE_APP_API_URL;
     });
+
+    // Encore.configureLoaderRule('eslint', loader => {
+    //   loader.test = /\.(jsx?|vue)$/
+    // });
 
 
 module.exports = Encore.getWebpackConfig();

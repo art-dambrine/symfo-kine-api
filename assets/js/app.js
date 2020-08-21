@@ -16,7 +16,10 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
+import VueLodash from 'vue-lodash'
+import lodash from 'lodash'
+
+import {BootstrapVue} from 'bootstrap-vue'
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
@@ -27,6 +30,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
+
+Vue.use(VueLodash, {lodash: lodash})
 
 new Vue({
     el: '#app',
