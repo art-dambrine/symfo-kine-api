@@ -165,3 +165,28 @@ https://symfony.com/doc/current/reference/constraints/NotBlank.html
 ````
 composer require "lexik/jwt-authentication-bundle"
 ````
+
+# Installation de VueJS avec Symfony
+
+```
+$ composer req encore
+
+$ npm install
+
+$ npm install -D vue vue-loader vue-template-compiler
+
+$ npm install bootstrap bootstrap-vue
+$ npm install dotenv
+```
+
+## Lancer le serveur de dev
+
+```
+$ npm run dev-server
+```
+
+## Compiler pour la prod
+
+```
+$ npm run build
+```
