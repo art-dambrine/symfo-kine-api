@@ -1,32 +1,20 @@
 <template>
     <div>
-        <h2>Composant Vue APP</h2>
-        <p>Mon URL d'API (.env) : {{urlApi}}</p>
-        <button class="btn btn-primary" @click="consolelog">Get ramdom number from lodash</button>
-        <example></example>
+        <navbar></navbar>
+        <div class="container pt-5">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
 <script>
-    import Example from './components/Example'
 
+  import Navbar from './components/Navbar'
 
-    export default {
-        name: "App",
-        components : {
-          Example
-        },
-        data () {
-            return {
-                urlApi: process.env.VUE_APP_API_URL
-            }
-        },
-        methods : {
-             consolelog() {
-                console.log(this.lodash.random(0,5))
-             }
-        }
-    }
+  export default {
+    name: 'App',
+    components: { Navbar }
+  }
 </script>
 
 <style scoped>

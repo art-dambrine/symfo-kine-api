@@ -26,6 +26,7 @@
         "bootstrap-vue": "^2.16.0",
         "dotenv": "^8.2.0",
         "lodash": "^4.17.20",
-        "vue-lodash": "^2.1.2"
+        "vue-lodash": "^2.1.2",
+        "vue-router": "^3.4.3"
     }
 }
