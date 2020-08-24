@@ -31,6 +31,16 @@ class ExerciceRepository extends ServiceEntityRepository
                     ->getSingleScalarResult();
     }
 
+    public function deleteExercicesByPatient(Patient $patient)
+    {
+        return $this->createQueryBuilder("e")
+            ->delete("App\Entity\Exercice", "e")
+            ->where("e.patient = :patient")
+            ->setParameter("patient", $patient)
+            ->getQuery()
+            ->execute();
+    }
+
     // /**
     //  * @return Exercice[] Returns an array of Exercice objects
     //  */

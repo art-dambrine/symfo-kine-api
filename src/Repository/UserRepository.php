@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Patient;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,6 +35,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function deleteUserByPatient(Patient $patient)
+    {
+        return $this->createQueryBuilder("u")
+                    ->delete("App\Entity\User", "u")
+                    ->where("u.patient = :patient")
+                    ->setParameter("patient", $patient)
+                    ->getQuery()
+                    ->execute();
     }
 
     // /**

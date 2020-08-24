@@ -49,7 +49,7 @@ class AppFixtures extends Fixture
             $manager->persist($patient);
             $manager->persist($user);
 
-            for ($c = 0; $c < mt_rand(2, 4); $c++) {
+            for ($c = 0; $c < mt_rand(0, 4); $c++) {
                 $exercice = new Exercice();
                 $exercice->setName(strtoupper($faker->randomLetter))
                     ->setNumberOf($faker->numberBetween(5, 20))
