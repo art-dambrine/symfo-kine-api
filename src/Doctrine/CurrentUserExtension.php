@@ -30,22 +30,24 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
         $user = $this->security->getUser();
 
         // Si on est dans le cas d'un utilisateur classique "ROLE_USER" on ne lui affichera que ses données personelles
-        if ($user->getRoles()[0] === "ROLE_USER" && $user instanceof User) {
+        if ($user) {
+            if ($user->getRoles()[0] === "ROLE_USER" && $user instanceof User) {
 
-            $patientId = $user->getPatient()->getId();
+                $patientId = $user->getPatient()->getId();
 
-            // 2. Si on demande des patients ou des exercices, agir sur la requête pour qu'elle tienne compte de l'utilisateur connecté
-            if ($resourceClass === Patient::class || $resourceClass === Exercice::class) {
-                $rootAlias = $queryBuilder->getRootAliases()[0];
+                // 2. Si on demande des patients ou des exercices, agir sur la requête pour qu'elle tienne compte de l'utilisateur connecté
+                if ($resourceClass === Patient::class || $resourceClass === Exercice::class) {
+                    $rootAlias = $queryBuilder->getRootAliases()[0];
 
-                if ($resourceClass === Patient::class) {
-                    $queryBuilder->andWhere("$rootAlias.id = :patientId");
-                } else if ($resourceClass === Exercice::class) {
-                    $queryBuilder->andWhere("$rootAlias.patient = :patientId");
+                    if ($resourceClass === Patient::class) {
+                        $queryBuilder->andWhere("$rootAlias.id = :patientId");
+                    } else if ($resourceClass === Exercice::class) {
+                        $queryBuilder->andWhere("$rootAlias.patient = :patientId");
+                    }
+                    $queryBuilder->setParameter("patientId", $patientId);
+
+                    // dd($queryBuilder);
                 }
-                $queryBuilder->setParameter("patientId", $patientId);
-
-                // dd($queryBuilder);
             }
         }
     }

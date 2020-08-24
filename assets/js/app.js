@@ -8,9 +8,11 @@
 // any CSS you import will output into a single css file (app.css in this case)
 // import '../css/app.css';
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
-
 // console.log('Hello Webpack Encore !! in assets/js/app.js');
 
 import Vue from 'vue'
@@ -23,8 +25,6 @@ import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
 
 import { BootstrapVue } from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // Install BootstrapVue
 Vue.use(BootstrapVue)
