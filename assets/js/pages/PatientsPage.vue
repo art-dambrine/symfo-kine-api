@@ -2,6 +2,10 @@
     <div>
         <h1>Liste des patients</h1>
 
+        <div class="form-group">
+            <input type="text" v-model="search" class="form-control" placeholder="Rechercher...">
+        </div>
+
         <table class="table table-hover">
             <thead>
             <tr>
@@ -28,6 +32,7 @@
         </table>
 
         <pagination
+                v-show="(filteredPatients!=null && itemsPerPage < filteredPatients.length)"
                 :current-page="currentPage"
                 :items-per-page="itemsPerPage"
                 :table-length="tableLength"
@@ -49,18 +54,37 @@
       return {
         patients: null,
         currentPage: 1,
-        itemsPerPage: 6
+        itemsPerPage: 6,
+        search: ''
       }
     },
     computed: {
-      paginatedPatients () {
-        return getDataPagination.paginatedItems(this.patients, this.currentPage, this.itemsPerPage)
-      },
-      tableLength () {
+      filteredPatients () {
         if (this.patients != null)
-          return this.patients.length
+          return this.patients.filter(
+            patient =>
+              patient.firstName.toLowerCase().includes(this.search.toLowerCase()) ||
+              patient.lastName.toLowerCase().includes(this.search.toLowerCase())
+          )
         else
           return null
+      },
+      paginatedPatients () {
+        if (this.search != '')
+          return getDataPagination.paginatedItems(this.filteredPatients, this.currentPage, this.itemsPerPage)
+        else
+          return getDataPagination.paginatedItems(this.patients, this.currentPage, this.itemsPerPage)
+      },
+      tableLength () {
+        if (this.filteredPatients != null)
+          return this.filteredPatients.length
+        else
+          return null
+      }
+    },
+    watch: {
+      search: function () {
+        this.currentPage = 1
       }
     },
     methods: {
@@ -91,7 +115,7 @@
           })
       },
       handlePageChange (page) {
-          this.currentPage = page
+        this.currentPage = page
       }
     },
     mounted () {
