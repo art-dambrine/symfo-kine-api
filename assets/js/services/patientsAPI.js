@@ -4,7 +4,7 @@ function findAll () {
     redirect: 'follow'
   }
 
-  return fetch('http://localhost/api/patients', requestOptions)
+  return fetch(process.env.VUE_APP_API_URL + '/api/patients', requestOptions)
     .then(response => response.json())
     .then(result => result['hydra:member'])
 }
@@ -15,7 +15,7 @@ function deletePatient (id) {
     redirect: 'follow'
   }
 
-  return fetch('http://localhost/api/patients/' + id, requestOptions)
+  return fetch(process.env.VUE_APP_API_URL + '/api/patients/' + id, requestOptions)
 }
 
 export default {
