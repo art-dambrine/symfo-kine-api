@@ -44,8 +44,8 @@
 
 <script>
 
-  import Pagination from '../components/Pagination'
-  import { getDataPagination } from '../components/Pagination'
+  import Pagination, { getDataPagination } from '../components/Pagination'
+  import patientsAPI from '../services/patientsAPI'
 
   export default {
     name: 'PatientsPage',
@@ -59,6 +59,8 @@
       }
     },
     computed: {
+
+      // Retourne le tableau filtré des patients en fonction de la recherche
       filteredPatients () {
         if (this.patients != null)
           return this.patients.filter(
@@ -69,12 +71,16 @@
         else
           return null
       },
+
+      // Retourne les données paginées
       paginatedPatients () {
         if (this.search != '')
           return getDataPagination.paginatedItems(this.filteredPatients, this.currentPage, this.itemsPerPage)
         else
           return getDataPagination.paginatedItems(this.patients, this.currentPage, this.itemsPerPage)
       },
+
+      // Retourne la taille du tableau de patients filtré
       tableLength () {
         if (this.filteredPatients != null)
           return this.filteredPatients.length
@@ -83,51 +89,53 @@
       }
     },
     watch: {
+      // On ramène l'utilisateur à la page 1 à chaque modification de 'search'
       search: function () {
         this.currentPage = 1
       }
     },
     methods: {
+
+      // Permet de récupérer les patients
+      async fetchPatients () {
+        try {
+          this.patients = await patientsAPI.findAll()
+        } catch (e) {
+          console.log('error', e)
+        }
+      },
+
+      // Conversion d'un timestamp au format de date locale
       localeDateString (timestamp) {
         return new Date(timestamp).toLocaleDateString()
       },
-      handleDelete (patientId) {
+
+      // Gestion de la suppression d'un patient
+      async handleDelete (patientId) {
 
         let originalPatients = [...this.patients]
 
+        // ASTUCE: retire dynamiquement le patient au clic sur "supprimer" (approche optimiste)
         this.patients = this.patients.filter(patient => patient.id != patientId)
 
-        var requestOptions = {
-          method: 'DELETE',
-          redirect: 'follow'
+        try {
+          let response = await patientsAPI.delete(patientId)
+          if (!response.ok)
+            this.patients = originalPatients
+        } catch (e) {
+          this.patients = originalPatients
+          console.log('error', e)
         }
 
-        fetch('http://localhost/api/patients/' + patientId, requestOptions)
-          .then(response => {
-            if (!response.ok) {
-              this.patients = originalPatients
-            }
-            return response.text()
-          })
-          .catch(error => {
-            this.patients = originalPatients
-            console.log('error', error)
-          })
       },
-      handlePageChange (page) {
-        this.currentPage = page
-      }
+
+      //Gestion du changement de page
+      handlePageChange (page) { this.currentPage = page}
+
     },
     mounted () {
-      let requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-      }
-
-      fetch('http://localhost/api/patients', requestOptions)
-        .then(response => response.json())
-        .then(result => this.patients = result['hydra:member'])
-        .catch(error => console.log('error', error))
+      // Au chargement du composant, on va chercher les patients
+      this.fetchPatients()
     }
   }
 </script>
