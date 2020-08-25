@@ -12,8 +12,9 @@
 // import $ from 'jquery';
 // console.log('Hello Webpack Encore !! in assets/js/app.js');
 
-import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+// import 'bootstrap/dist/css/bootstrap.css'
+import '../css/litera-bootstrap.css'
 
 import Vue from 'vue'
 import App from './App.vue'

@@ -54,7 +54,7 @@
       return {
         patients: null,
         currentPage: 1,
-        itemsPerPage: 6,
+        itemsPerPage: 10,
         search: ''
       }
     },
