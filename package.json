@@ -22,6 +22,7 @@
         "lint": "eslint assets --ext .js,.vue"
     },
     "dependencies": {
+        "axios": "^0.20.0",
         "bootstrap": "^4.5.2",
         "bootstrap-vue": "^2.16.0",
         "dotenv": "^8.2.0",

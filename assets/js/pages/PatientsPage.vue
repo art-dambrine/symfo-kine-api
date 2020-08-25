@@ -45,7 +45,7 @@
 <script>
 
   import Pagination, { getDataPagination } from '../components/Pagination'
-  import patientsAPI from '../services/patientsAPI'
+  import PatientsAPI from '../services/patientsAPI'
 
   export default {
     name: 'PatientsPage',
@@ -99,7 +99,7 @@
       // Permet de récupérer les patients
       async fetchPatients () {
         try {
-          this.patients = await patientsAPI.findAll()
+          this.patients = await PatientsAPI.findAll()
         } catch (e) {
           console.log('error', e)
         }
@@ -119,9 +119,7 @@
         this.patients = this.patients.filter(patient => patient.id != patientId)
 
         try {
-          let response = await patientsAPI.delete(patientId)
-          if (!response.ok)
-            this.patients = originalPatients
+          await PatientsAPI.delete(patientId)
         } catch (e) {
           this.patients = originalPatients
           console.log('error', e)

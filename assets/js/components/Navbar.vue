@@ -13,11 +13,11 @@
 
                 <!-- Right aligned nav items -->
                 <b-navbar-nav class="ml-auto">
-                    <b-nav-item href="#">
+                    <b-nav-item :to="{ name: 'login' }">
                         <button class="btn btn-success">Connexion</button>
                     </b-nav-item>
-                    <b-nav-item href="#">
-                        <button class="btn btn-danger">Déconnexion</button>
+                    <b-nav-item>
+                        <button @click="handleLogout" class="btn btn-danger">Déconnexion</button>
                     </b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
@@ -26,8 +26,15 @@
 </template>
 
 <script>
+  import AuthAPI from '../services/authAPI'
+
   export default {
-    name: 'Navbar'
+    name: 'Navbar',
+    methods : {
+      handleLogout() {
+        AuthAPI.logout()
+      }
+    }
   }
 </script>
 

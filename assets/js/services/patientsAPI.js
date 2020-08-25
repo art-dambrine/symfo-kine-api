@@ -1,21 +1,28 @@
+import axios from 'axios'
+
 function findAll () {
-  let requestOptions = {
-    method: 'GET',
-    redirect: 'follow'
+
+  let config = {
+    method: 'get',
+    url: process.env.VUE_APP_API_URL + '/api/patients',
+    headers: {}
   }
 
-  return fetch(process.env.VUE_APP_API_URL + '/api/patients', requestOptions)
-    .then(response => response.json())
-    .then(result => result['hydra:member'])
+  return axios(config)
+    .then(response => response.data['hydra:member'])
+
 }
 
 function deletePatient (id) {
-  let requestOptions = {
-    method: 'DELETE',
-    redirect: 'follow'
+
+  let config = {
+    method: 'delete',
+    url: process.env.VUE_APP_API_URL + '/api/patients/' + id,
+    headers: {}
   }
 
-  return fetch(process.env.VUE_APP_API_URL + '/api/patients/' + id, requestOptions)
+  return axios(config)
+
 }
 
 export default {
