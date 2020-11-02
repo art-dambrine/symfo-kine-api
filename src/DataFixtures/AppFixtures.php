@@ -6,7 +6,7 @@ use App\Entity\Exercice;
 use App\Entity\Patient;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -32,10 +32,10 @@ class AppFixtures extends Fixture
         $faker = Factory::create('fr_FR');
 
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 8; $i++) {
             $patient = new Patient();
 
-            $chrono = 1;
+            // $chrono = 1;
 
             $patient->setFirstName($faker->firstName())
                 ->setLastName($faker->lastName)
@@ -49,7 +49,7 @@ class AppFixtures extends Fixture
             $manager->persist($patient);
             $manager->persist($user);
 
-            for ($c = 0; $c < mt_rand(0, 4); $c++) {
+            /*for ($c = 0; $c < mt_rand(0, 4); $c++) {
                 $exercice = new Exercice();
                 $exercice->setName(strtoupper($faker->randomLetter))
                     ->setNumberOf($faker->numberBetween(5, 20))
@@ -59,7 +59,7 @@ class AppFixtures extends Fixture
                 $chrono++;
 
                 $manager->persist($exercice);
-            }
+            }*/
         }
 
 

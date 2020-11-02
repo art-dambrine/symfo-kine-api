@@ -55,11 +55,6 @@ class Patient
      */
     private $birthdate;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Exercice::class, mappedBy="patient")
-     * @ApiSubresource
-     */
-    private $exercices;
 
     public function __construct()
     {
@@ -119,34 +114,4 @@ class Patient
         return $this;
     }
 
-    /**
-     * @return Collection|Exercice[]
-     */
-    public function getExercices(): Collection
-    {
-        return $this->exercices;
-    }
-
-    public function addExercice(Exercice $exercice): self
-    {
-        if (!$this->exercices->contains($exercice)) {
-            $this->exercices[] = $exercice;
-            $exercice->setPatient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeExercice(Exercice $exercice): self
-    {
-        if ($this->exercices->contains($exercice)) {
-            $this->exercices->removeElement($exercice);
-            // set the owning side to null (unless already changed)
-            if ($exercice->getPatient() === $this) {
-                $exercice->setPatient(null);
-            }
-        }
-
-        return $this;
-    }
 }

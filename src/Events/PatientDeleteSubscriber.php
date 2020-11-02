@@ -19,15 +19,11 @@ class PatientDeleteSubscriber implements EventSubscriberInterface
      */
     private $userRepository;
 
-    /**
-     * @var ExerciceRepository
-     */
-    private $exerciceRepository;
 
-    public function __construct(UserRepository $userRepository, ExerciceRepository $exerciceRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
-        $this->exerciceRepository = $exerciceRepository;
+
     }
 
 
@@ -45,7 +41,6 @@ class PatientDeleteSubscriber implements EventSubscriberInterface
 
         if ($patient instanceof Patient && $method === "DELETE") {
             $this->userRepository->deleteUserByPatient($patient);
-            $this->exerciceRepository->deleteExercicesByPatient($patient);
         }
     }
 
