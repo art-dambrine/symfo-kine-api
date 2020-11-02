@@ -55,23 +55,59 @@ class Patient
      */
     private $birthdate;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $borg;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $taille;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $poids;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $bbloquant;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $dnd;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $did;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Fce::class, mappedBy="patient")
+     */
+    private $fces;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Fevg::class, mappedBy="patient")
+     */
+    private $fevgs;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PatientConfigExercice::class, mappedBy="patient")
+     */
+    private $exercice;
+
 
     public function __construct()
     {
-        $this->exercices = new ArrayCollection();
+        $this->fces = new ArrayCollection();
+        $this->fevgs = new ArrayCollection();
+        $this->exercice = new ArrayCollection();
     }
 
-    /**
-     * Recupère le nombre total de repetitions à réaliser par le patient
-     * @Groups({"patients_read"})
-     * @return int
-     */
-    public function getTotalRepetition(): int
-    {
-        return array_reduce($this->exercices->toArray(), function ($total, $exercice) {
-            return $total + $exercice->getNumberOf();
-        }, 0);
-    }
 
     public function getId(): ?int
     {
@@ -110,6 +146,171 @@ class Patient
     public function setBirthdate(\DateTimeInterface $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getBorg(): ?bool
+    {
+        return $this->borg;
+    }
+
+    public function setBorg(bool $borg): self
+    {
+        $this->borg = $borg;
+
+        return $this;
+    }
+
+    public function getTaille(): ?int
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?int $taille): self
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getPoids(): ?int
+    {
+        return $this->poids;
+    }
+
+    public function setPoids(?int $poids): self
+    {
+        $this->poids = $poids;
+
+        return $this;
+    }
+
+    public function getBbloquant(): ?bool
+    {
+        return $this->bbloquant;
+    }
+
+    public function setBbloquant(bool $bbloquant): self
+    {
+        $this->bbloquant = $bbloquant;
+
+        return $this;
+    }
+
+    public function getDnd(): ?bool
+    {
+        return $this->dnd;
+    }
+
+    public function setDnd(bool $dnd): self
+    {
+        $this->dnd = $dnd;
+
+        return $this;
+    }
+
+    public function getDid(): ?bool
+    {
+        return $this->did;
+    }
+
+    public function setDid(bool $did): self
+    {
+        $this->did = $did;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Fce[]
+     */
+    public function getFces(): Collection
+    {
+        return $this->fces;
+    }
+
+    public function addFce(Fce $fce): self
+    {
+        if (!$this->fces->contains($fce)) {
+            $this->fces[] = $fce;
+            $fce->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFce(Fce $fce): self
+    {
+        if ($this->fces->contains($fce)) {
+            $this->fces->removeElement($fce);
+            // set the owning side to null (unless already changed)
+            if ($fce->getPatient() === $this) {
+                $fce->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Fevg[]
+     */
+    public function getFevgs(): Collection
+    {
+        return $this->fevgs;
+    }
+
+    public function addFevg(Fevg $fevg): self
+    {
+        if (!$this->fevgs->contains($fevg)) {
+            $this->fevgs[] = $fevg;
+            $fevg->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFevg(Fevg $fevg): self
+    {
+        if ($this->fevgs->contains($fevg)) {
+            $this->fevgs->removeElement($fevg);
+            // set the owning side to null (unless already changed)
+            if ($fevg->getPatient() === $this) {
+                $fevg->setPatient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PatientConfigExercice[]
+     */
+    public function getExercice(): Collection
+    {
+        return $this->exercice;
+    }
+
+    public function addExercice(PatientConfigExercice $exercice): self
+    {
+        if (!$this->exercice->contains($exercice)) {
+            $this->exercice[] = $exercice;
+            $exercice->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(PatientConfigExercice $exercice): self
+    {
+        if ($this->exercice->contains($exercice)) {
+            $this->exercice->removeElement($exercice);
+            // set the owning side to null (unless already changed)
+            if ($exercice->getPatient() === $this) {
+                $exercice->setPatient(null);
+            }
+        }
 
         return $this;
     }
