@@ -22,6 +22,7 @@
                 <td class="text-center"><a href="#">{{patient.firstName}} {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
                 <td class="text-center">
+                    <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
                     <button class="btn btn-sm btn-info">Editer</button>
                     <button class="btn btn-sm btn-danger" :disabled="patient.totalRepetition > 0"
                             @click="handleDelete(patient.id)">Supprimer
@@ -128,7 +129,11 @@
       },
 
       //Gestion du changement de page
-      handlePageChange (page) { this.currentPage = page}
+      handlePageChange (page) { this.currentPage = page},
+
+        redirectToPatientProfile (patient) {
+            this.$router.push({ name: 'patient', params: { id: patient.id } })
+        }
 
     },
     mounted () {

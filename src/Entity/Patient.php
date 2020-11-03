@@ -57,46 +57,56 @@ class Patient
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"patients_read"})
      */
     private $borg;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"patients_read"})
+     * @Groups({"patients_read"})
      */
     private $taille;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"patients_read"})
      */
     private $poids;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"patients_read"})
      */
     private $bbloquant;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"patients_read"})
      */
     private $dnd;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"patients_read"})
      */
     private $did;
 
     /**
      * @ORM\OneToMany(targetEntity=Fce::class, mappedBy="patient")
+     * @Groups({"patients_read"})
      */
     private $fces;
 
     /**
      * @ORM\OneToMany(targetEntity=Fevg::class, mappedBy="patient")
+     * @Groups({"patients_read"})
      */
     private $fevgs;
 
     /**
      * @ORM\OneToMany(targetEntity=PatientConfigExercice::class, mappedBy="patient")
+     * @Groups({"patients_read"})
      */
     private $exercice;
 
