@@ -32,6 +32,9 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 // Vue.use(IconsPlugin)
 
+import ToggleButton from 'vue-js-toggle-button'
+Vue.use(ToggleButton)
+
 Vue.use(VueRouter)
 Vue.use(VueLodash, { lodash: lodash })
 

@@ -1,106 +1,136 @@
 <template>
     <div>
-        <h2>Consultation / edition du profil patient :</h2> <br>
-
         <div class="patient-profile jumbotron">
             <div class="container">
-                <h1 class="display-4">{{patient.firstName}} {{patient.lastName}}</h1>
-                <p class="lead">
-                    Date de naissance : {{localeDateString(Date.parse(patient.birthdate))}} <br>
-                </p>
+                <div class="profil-header">
+                    <span>{{patient.firstName}} {{patient.lastName}} <span class="profil-date-naissance"> - {{localeDateString(Date.parse(patient.birthdate))}}</span></span>
+                </div>
 
-                <table>
-                    <!-- taille -->
-                    <tr>
-                        <td>Taille (cm)</td>
-                        <td>
-                            <div class="form-group my-auto">
-                                <input type="text" class="form-control" id="inputTaille" v-model="patient.taille">
-                            </div>
-                        </td>
-                    </tr>
+                <div class="tables-flex-container">
+                    <table>
+                        <!-- taille -->
+                        <tr>
+                            <td>Taille (cm)</td>
+                            <td>
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" id="inputTaille" v-model="patient.taille">
+                                </div>
+                            </td>
+                        </tr>
 
-                    <!-- poids -->
-                    <tr>
-                        <td>Poids (kg)</td>
-                        <td>
-                            <div class="form-group my-auto">
-                                <input type="text" class="form-control" id="inputPoids" v-model="patient.poids">
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- poids -->
+                        <tr>
+                            <td>Poids (kg)</td>
+                            <td>
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" id="inputPoids" v-model="patient.poids">
+                                </div>
+                            </td>
+                        </tr>
 
-                    <!-- IMC -->
-                    <tr>
-                        <td>IMC</td>
-                        <td>
-                            <div class="form-group my-auto">
-                                <input type="text" class="form-control" id="inputIMC" v-bind:value="calcIMC(patient)"
-                                       disabled>
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- IMC -->
+                        <tr>
+                            <td>IMC</td>
+                            <td>
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" id="inputIMC"
+                                           v-bind:value="calcIMC(patient)"
+                                           disabled>
+                                </div>
+                            </td>
+                        </tr>
 
-                    <br>
+                        <br>
 
-                    <!-- Borg-->
-                    <tr>
-                        <td>Borg</td>
-                        <td>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptionsBorg"
-                                       id="radioBorgTrue" value="true" v-model="patient.borg">
-                                <label class="form-check-label" for="radioBorgTrue">Oui</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptionsBorg"
-                                       id="radioBorgFalse" value="false" v-model="patient.borg">
-                                <label class="form-check-label" for="radioBorgFalse">Non</label>
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- Borg-->
+                        <tr>
+                            <td>Borg</td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptionsBorg"
+                                           id="radioBorgTrue" value="true" v-model="patient.borg">
+                                    <label class="form-check-label" for="radioBorgTrue">Oui</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptionsBorg"
+                                           id="radioBorgFalse" value="false" v-model="patient.borg">
+                                    <label class="form-check-label" for="radioBorgFalse">Non</label>
+                                </div>
+                            </td>
+                        </tr>
 
-                    <br>
+                        <br>
 
-                    <!-- Bbloquant-->
-                    <tr>
-                        <td>BBloquant</td>
-                        <td>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptionsBbloquant"
-                                       id="radioBbloquantTrue" value="true" v-model="patient.bbloquant">
-                                <label class="form-check-label" for="radioBbloquantTrue">Oui</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptionsBbloquant"
-                                       id="radioBbloquantFalse" value="false" v-model="patient.bbloquant">
-                                <label class="form-check-label" for="radioBbloquantFalse">Non</label>
-                            </div>
-                        </td>
-                    </tr>
+                        <!-- Bbloquant-->
+                        <tr>
+                            <td>BBloquant</td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptionsBbloquant"
+                                           id="radioBbloquantTrue" value="true" v-model="patient.bbloquant">
+                                    <label class="form-check-label" for="radioBbloquantTrue">Oui</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptionsBbloquant"
+                                           id="radioBbloquantFalse" value="false" v-model="patient.bbloquant">
+                                    <label class="form-check-label" for="radioBbloquantFalse">Non</label>
+                                </div>
+                            </td>
+                        </tr>
 
-                    <!-- Diabete DND DID Aucun -->
-                    <tr>
-                        <td>Diabete</td>
-                        <td>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckboxDnd"
-                                       v-model="patient.dnd">
-                                <label class="form-check-label" for="inlineCheckboxDnd">DND</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckboxDid"
-                                       v-model="patient.did">
-                                <label class="form-check-label" for="inlineCheckboxDid">DID</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="checkbox" id="inlineCheckboxAucunDiabete"
-                                       v-model="diabete" disabled>
-                                <label class="form-check-label" for="inlineCheckboxAucunDiabete">Aucun</label>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                        <!-- Diabete DND DID Aucun -->
+                        <tr>
+                            <td>Diabete</td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxDnd"
+                                           v-model="patient.dnd">
+                                    <label class="form-check-label" for="inlineCheckboxDnd">DND</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxDid"
+                                           v-model="patient.did">
+                                    <label class="form-check-label" for="inlineCheckboxDid">DID</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckboxAucunDiabete"
+                                           v-model="diabete" disabled>
+                                    <label class="form-check-label" for="inlineCheckboxAucunDiabete">Aucun</label>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <br>
+
+                        <!-- Fce -->
+                        <tr>
+                            <td>Fce ( {{localeDateString(Date.parse(mostRecentFce.createdAt))}} )</td>
+
+                            <td>
+                                {{mostRecentFce.fce}}
+                            </td>
+                        </tr>
+
+                        <!-- Fevg -->
+                        <tr>
+                            <td>Fevg ( {{localeDateString(Date.parse(mostRecentFevg.createdAt))}} )</td>
+                            <td>
+                                {{mostRecentFevg.fevg}}
+                            </td>
+                        </tr>
+
+                    </table>
+
+                    <table>
+                        <!-- Exercices -->
+                        <tr v-for="exercice in patient.exercice" :key="exercice.id">
+                            <td>Exercice : {{exercice.exercice.name}}</td>
+                            <td>
+                                <toggle-button class="my-auto" v-model="exercice.enabled" :labels="{checked: 'Oui', unchecked: 'Non'}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
             </div>
         </div>
@@ -141,7 +171,18 @@
         let did = (this.patient.did == 1)
         let dnd = (this.patient.dnd == 1)
         return (!did && !dnd)
+      },
+      mostRecentFce () {
+        let recentFce = this.lodash.orderBy(this.patient.fces, 'createdAt', 'desc')[0]
+        if (recentFce == undefined) return 'Fce non définit.'
+        return recentFce
+      },
+      mostRecentFevg () {
+        let recentFevg = this.lodash.orderBy(this.patient.fevgs, 'createdAt', 'desc')[0]
+        if (recentFevg == undefined) return 'Fevg non définit.'
+        return recentFevg
       }
+
     },
     mounted () {
       // Au chargement du composant on charge le profile du patient
@@ -152,6 +193,27 @@
 
 <style scoped>
 
+    .jumbotron {
+        padding: 2rem;
+    }
+
+    .profil-header{
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    .profil-date-naissance{
+        color: gray;
+        font-weight: lighter;
+    }
+
+    .tables-flex-container {
+        display: flex;
+    }
+
     table tr {
         display: flex;
         text-align: center;
@@ -159,7 +221,7 @@
     }
 
     table tr td:first-child {
-        width: 100px;
+        width: 150px;
     }
 
     table tr td:nth-child(2) {
@@ -175,6 +237,21 @@
 
     table tr td:last-child {
         padding-right: 0;
+    }
+
+    /* CSS spécifique du tableau n°1 */
+
+    table:first-child {
+        margin-right: 80px;
+    }
+
+    /* CSS spécifique du tableau n°2 */
+    table:nth-child(2) tr td {
+        justify-content: left;
+    }
+
+    table:nth-child(2) tr td:first-child {
+        width: 200px;
     }
 
 

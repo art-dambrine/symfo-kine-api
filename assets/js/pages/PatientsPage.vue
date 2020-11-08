@@ -19,7 +19,7 @@
             <tbody>
             <tr v-for="patient in paginatedPatients" :key="patient.id">
                 <td>{{patient.id}}</td>
-                <td class="text-center"><a href="#">{{patient.firstName}} {{patient.lastName}}</a></td>
+                <td class="text-center" @click="redirectToPatientProfile(patient)" ><a href="#">{{patient.firstName}} {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
                 <td class="text-center">
                     <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
@@ -114,6 +114,12 @@
       // Gestion de la suppression d'un patient
       async handleDelete (patientId) {
 
+        // Validation avant suppression
+        let patient = this.patients.filter(patient => patient.id == patientId)
+        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient[0].firstName + " " + patient[0].lastName + ' ?')
+        if (!confirm) return
+
+
         let originalPatients = [...this.patients]
 
         // ASTUCE: retire dynamiquement le patient au clic sur "supprimer" (approche optimiste)
@@ -131,9 +137,9 @@
       //Gestion du changement de page
       handlePageChange (page) { this.currentPage = page},
 
-        redirectToPatientProfile (patient) {
-            this.$router.push({ name: 'patient', params: { id: patient.id } })
-        }
+      redirectToPatientProfile (patient) {
+        this.$router.push({ name: 'patient', params: { id: patient.id } })
+      }
 
     },
     mounted () {

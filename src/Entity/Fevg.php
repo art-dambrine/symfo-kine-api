@@ -4,9 +4,16 @@ namespace App\Entity;
 
 use App\Repository\FevgRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FevgRepository::class)
+ * @ApiResource(
+ *     normalizationContext={
+ *          "groups"={"fevg_read"}
+ *     }
+ * )
  */
 class Fevg
 {
@@ -14,21 +21,25 @@ class Fevg
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"patients_read", "fevg_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"patients_read", "fevg_read"})
      */
     private $fevg;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"patients_read", "fevg_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Patient::class, inversedBy="fevgs")
+     * @Groups({"fevg_read"})
      */
     private $patient;
 

@@ -4,9 +4,16 @@ namespace App\Entity;
 
 use App\Repository\PatientConfigExerciceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PatientConfigExerciceRepository::class)
+ * * @ApiResource(
+ *     normalizationContext={
+ *          "groups"={"config_exercices_read"}
+ *     }
+ * )
  */
 class PatientConfigExercice
 {
@@ -14,33 +21,40 @@ class PatientConfigExercice
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $OneRm;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $enabled;
 
     /**
      * @ORM\ManyToOne(targetEntity=Patient::class, inversedBy="exercice")
+     * @Groups({"config_exercices_read"})
      */
     private $patient;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Exercice::class)
+     * @ORM\ManyToOne(targetEntity=Exercice::class, inversedBy="patientConfigExercices")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $exercice;
+
 
     public function getId(): ?int
     {
@@ -106,4 +120,5 @@ class PatientConfigExercice
 
         return $this;
     }
+
 }
