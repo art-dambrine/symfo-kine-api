@@ -19,11 +19,13 @@ class Exercice
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"config_exercices_read","patients_read"})
      */
     private $name;
 
