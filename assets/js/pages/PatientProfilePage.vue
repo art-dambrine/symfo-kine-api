@@ -4,6 +4,15 @@
             <div class="container">
                 <div class="profil-header">
                     <span>{{patient.firstName}} {{patient.lastName}} <span class="profil-date-naissance"> - {{localeDateString(Date.parse(patient.birthdate))}}</span></span>
+                    <date-picker v-model="patient.birthdate">
+                        <template v-slot="{ inputValue, inputEvents }">
+                            <div class="calendar-input-wrapper my-auto" @click="tooglePopOver">
+                                <input class="btn btn-info button-calendar" id="calendar-input" v-on="inputEvents"/>
+                                <i class="far fa-calendar-alt"></i>
+                            </div>
+                        </template>
+                    </date-picker>
+
                 </div>
 
                 <div class="tables-flex-container">
@@ -140,13 +149,16 @@
 
                             <td>
                                 <toggle-button class="my-auto" v-model="exercice.enabled"
+                                               :sync="true"
                                                :labels="{checked: 'Oui', unchecked: 'Non'}"/>
                             </td>
                         </tr>
 
                         <tr class="tr-button-generer-exercices">
                             <div>
-                                <button class="btn btn-primary">Générer les exercices</button>
+                                <button class="btn btn-primary" @click="handleGenerationExercices(patient.id)">Régénérer
+                                    les exercices
+                                </button>
                             </div>
                         </tr>
 
@@ -154,9 +166,10 @@
                 </div>
 
                 <div class="actions-buttons">
-                    <button class="btn btn-info">Changer la date de naissance</button>
-                    <button class="btn btn-danger bouton-suppression" @click="handleDelete(patient.id)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-danger bouton-suppression" @click="handleDelete(patient.id)"><i
+                            class="fas fa-trash-alt"></i></button>
                     <button class="btn btn-success">Sauvegarder les informations saisies</button>
+
                 </div>
 
             </div>
@@ -168,9 +181,11 @@
 <script>
   import patientsAPI from '../services/patientsAPI'
   import PatientsAPI from '../services/patientsAPI'
+  import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 
   export default {
     name: 'PatientProfilePage',
+    components: { DatePicker },
     data () {
       return {
         patient: null,
@@ -199,17 +214,30 @@
 
         // Validation avant suppression
         let patient = this.patient
-        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient.firstName + " " + patient.lastName + ' ?')
+        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient.firstName + ' ' + patient.lastName + ' ?')
         if (!confirm) return
-
 
         try {
           await PatientsAPI.delete(patientId)
-          this.$router.push({ name: 'patients'})
+          this.$router.push({ name: 'patients' })
         } catch (e) {
           console.log('error', e)
         }
 
+      },
+
+      async handleGenerationExercices (patientId) {
+
+        try {
+          let response = await PatientsAPI.generatePatientExerciceDefaultConfig(patientId)
+          this.patient.exercice = response.data.exercice
+          console.log(response.data.exercice)
+        } catch (e) {
+          console.log('error', e)
+        }
+      },
+      tooglePopOver () {
+        document.getElementById('calendar-input').focus()
       }
     },
     computed: {
@@ -227,6 +255,9 @@
         let recentFevg = this.lodash.orderBy(this.patient.fevgs, 'createdAt', 'desc')[0]
         if (recentFevg == undefined) return 'Fevg non définit.'
         return recentFevg
+      },
+      date () {
+        return this.patient.birthdate
       }
 
     },
@@ -241,7 +272,7 @@
 
     .jumbotron {
         padding: 1rem;
-        margin-bottom: 0;
+        margin: 0 auto;
     }
 
     .profil-header {
@@ -255,7 +286,37 @@
     .profil-date-naissance {
         color: gray;
         font-weight: lighter;
+        margin-right: 10px;
     }
+
+    /* Calendar input css */
+
+    .calendar-input-wrapper {
+        position: relative;
+        cursor: pointer;
+        width: 36px;
+        height: 36px;
+        transform: translateY(2px);
+    }
+
+    .button-calendar {
+        position: absolute;
+        font-size: 0.5em;
+        color: transparent;
+        width: inherit;
+        height: inherit;
+    }
+
+    .calendar-input-wrapper i {
+        color: white;
+        text-align: center;
+        width: inherit;
+        height: inherit;
+        font-size: 0.5em;
+        transform: translateY(-15px);
+    }
+
+    /* fin de calendar input css */
 
     .tables-flex-container {
         display: flex;
@@ -303,7 +364,7 @@
     }
 
     table:nth-child(2) tr td:nth-child(2) {
-        width: 80px;
+        width: 90px;
     }
 
 
@@ -316,8 +377,9 @@
     .actions-buttons {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: space-evenly;
         margin: 20px 20px 10px 20px;
+        max-width: 820px;
     }
 
     .actions-buttons button {
@@ -325,7 +387,7 @@
         padding: 12px;
     }
 
-    .bouton-suppression{
+    .bouton-suppression {
         padding: 0.6rem 1.5rem !important;
     }
 

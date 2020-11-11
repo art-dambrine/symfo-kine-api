@@ -66,7 +66,7 @@ class Patient
     private $birthdate;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"patients_read"})
      */
     private $borg;
@@ -85,19 +85,19 @@ class Patient
     private $poids;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"patients_read"})
      */
     private $bbloquant;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"patients_read"})
      */
     private $dnd;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"patients_read"})
      */
     private $did;

@@ -38,7 +38,24 @@ function deletePatient (id) {
 
 }
 
+function generatePatientExerciceDefaultConfig (id) {
+
+  let data = JSON.stringify({})
+
+  let config = {
+    method: 'post',
+    url: process.env.VUE_APP_API_URL + '/api/exercices/' + id + '/generateexercicesconfig',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  }
+
+  return axios(config)
+
+}
+
 export default {
-  findAll, findOne,
+  findAll, findOne, generatePatientExerciceDefaultConfig,
   delete: deletePatient
 }
