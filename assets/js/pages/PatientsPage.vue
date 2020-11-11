@@ -21,11 +21,10 @@
                 <td>{{patient.id}}</td>
                 <td class="text-center" @click="redirectToPatientProfile(patient)" ><a href="#">{{patient.firstName}} {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
-                <td class="text-center">
+                <td class="text-center buttons-actions">
                     <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
-                    <button class="btn btn-sm btn-info">Editer</button>
                     <button class="btn btn-sm btn-danger" :disabled="patient.totalRepetition > 0"
-                            @click="handleDelete(patient.id)">Supprimer
+                            @click="handleDelete(patient.id)"><i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             </tr>
@@ -150,5 +149,18 @@
 </script>
 
 <style scoped>
+
+    .buttons-actions{
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .buttons-actions button{
+        padding: 0.35rem 0.6rem;
+    }
+
+    .buttons-actions button:first-child{
+        flex: 0.4;
+    }
 
 </style>

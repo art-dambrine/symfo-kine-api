@@ -105,9 +105,10 @@
                         <!-- Fce -->
                         <tr>
                             <td>Fce ( {{localeDateString(Date.parse(mostRecentFce.createdAt))}} )</td>
-
                             <td>
-                                {{mostRecentFce.fce}}
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" id="inputFce" v-model="mostRecentFce.fce">
+                                </div>
                             </td>
                         </tr>
 
@@ -115,21 +116,47 @@
                         <tr>
                             <td>Fevg ( {{localeDateString(Date.parse(mostRecentFevg.createdAt))}} )</td>
                             <td>
-                                {{mostRecentFevg.fevg}}
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" id="inputFevg"
+                                           v-model="mostRecentFevg.fevg">
+                                </div>
                             </td>
                         </tr>
 
                     </table>
 
                     <table>
+                        <h4>Exercices</h4>
                         <!-- Exercices -->
                         <tr v-for="exercice in patient.exercice" :key="exercice.id">
-                            <td>Exercice : {{exercice.exercice.name}}</td>
+                            <td>{{exercice.exercice.name}} (1RM)</td>
+
                             <td>
-                                <toggle-button class="my-auto" v-model="exercice.enabled" :labels="{checked: 'Oui', unchecked: 'Non'}"/>
+                                <div class="form-group my-auto">
+                                    <input type="text" class="form-control" v-bind:id="'inputExercice'+exercice.id"
+                                           v-model="exercice.OneRm">
+                                </div>
+                            </td>
+
+                            <td>
+                                <toggle-button class="my-auto" v-model="exercice.enabled"
+                                               :labels="{checked: 'Oui', unchecked: 'Non'}"/>
                             </td>
                         </tr>
+
+                        <tr class="tr-button-generer-exercices">
+                            <div>
+                                <button class="btn btn-primary">Générer les exercices</button>
+                            </div>
+                        </tr>
+
                     </table>
+                </div>
+
+                <div class="actions-buttons">
+                    <button class="btn btn-info">Changer la date de naissance</button>
+                    <button class="btn btn-danger bouton-suppression" @click="handleDelete(patient.id)"><i class="fas fa-trash-alt"></i></button>
+                    <button class="btn btn-success">Sauvegarder les informations saisies</button>
                 </div>
 
             </div>
@@ -140,6 +167,7 @@
 
 <script>
   import patientsAPI from '../services/patientsAPI'
+  import PatientsAPI from '../services/patientsAPI'
 
   export default {
     name: 'PatientProfilePage',
@@ -164,6 +192,24 @@
       calcIMC (patient) {
         let IMC = (parseInt(patient.poids) / (Math.pow(parseInt(patient.taille) / 100, 2)))
         return Math.round(IMC * 100) / 100
+      },
+
+      // Gestion de la suppression d'un patient
+      async handleDelete (patientId) {
+
+        // Validation avant suppression
+        let patient = this.patient
+        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient.firstName + " " + patient.lastName + ' ?')
+        if (!confirm) return
+
+
+        try {
+          await PatientsAPI.delete(patientId)
+          this.$router.push({ name: 'patients'})
+        } catch (e) {
+          console.log('error', e)
+        }
+
       }
     },
     computed: {
@@ -194,10 +240,11 @@
 <style scoped>
 
     .jumbotron {
-        padding: 2rem;
+        padding: 1rem;
+        margin-bottom: 0;
     }
 
-    .profil-header{
+    .profil-header {
         margin-bottom: 20px;
         display: flex;
         align-items: center;
@@ -205,7 +252,7 @@
         font-weight: bold;
     }
 
-    .profil-date-naissance{
+    .profil-date-naissance {
         color: gray;
         font-weight: lighter;
     }
@@ -250,8 +297,36 @@
         justify-content: left;
     }
 
-    table:nth-child(2) tr td:first-child {
-        width: 200px;
+    table:nth-child(2) tr td {
+        width: auto;
+        padding-right: 20px;
+    }
+
+    table:nth-child(2) tr td:nth-child(2) {
+        width: 80px;
+    }
+
+
+    .tr-button-generer-exercices div {
+        margin-top: 5px;
+        width: 100%;
+    }
+
+
+    .actions-buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 20px 20px 10px 20px;
+    }
+
+    .actions-buttons button {
+        font-size: 0.9em;
+        padding: 12px;
+    }
+
+    .bouton-suppression{
+        padding: 0.6rem 1.5rem !important;
     }
 
 

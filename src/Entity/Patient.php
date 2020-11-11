@@ -18,6 +18,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     subresourceOperations={
  *          "exercices_get_subresource"={"path"="/patients/{id}/exercices"}
  *     },
+ *     itemOperations={"GET","PUT","DELETE","PATCH", "generateexercicesconfig"={
+ *          "method"="POST",
+ *          "path"="/exercices/{id}/generateexercicesconfig",
+ *          "controller"="App\Controller\PatientGenerateExercicesConfiguration",
+ *          "openapi_context"={
+ *          "summary"="Genere la config des exercices du patient",
+ *              "description"="Genere la config des exercices par defaut du patient et renvoie un tableau JSON"
+ *           }
+ *         }
+ *     },
  *     normalizationContext={
  *          "groups"={"patients_read"}
  *     },

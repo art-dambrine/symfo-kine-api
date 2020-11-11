@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\PatientConfigExercice;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,6 +19,25 @@ class PatientConfigExerciceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, PatientConfigExercice::class);
     }
+
+    /**
+     * @return PatientConfigExercice[] Returns an array of PatientConfigExercice objects
+     */
+
+    public function findListeExerciceByPatient($patientId)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('exe.id','exe.name')
+            ->leftJoin('App\Entity\Exercice', 'exe', Join::WITH, 'p.exercice = exe.id')
+            ->andWhere('p.patient = :patient')
+            ->setParameter('patient', $patientId)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
 
     // /**
     //  * @return PatientConfigExercice[] Returns an array of PatientConfigExercice objects
