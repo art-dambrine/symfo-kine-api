@@ -2,18 +2,21 @@
     <div>
         <div class="patient-profile jumbotron">
             <div class="container">
+
                 <div class="profil-header">
                     <span>{{patient.firstName}} {{patient.lastName}} <span class="profil-date-naissance"> - {{localeDateString(Date.parse(patient.birthdate))}}</span></span>
                     <date-picker v-model="patient.birthdate">
                         <template v-slot="{ inputValue, inputEvents }">
                             <div class="calendar-input-wrapper my-auto" @click="tooglePopOver">
-                                <input class="btn btn-info button-calendar" id="calendar-input" v-on="inputEvents"/>
+                                <input class="btn btn-info button-calendar scale-reduce" id="calendar-input"
+                                       v-on="inputEvents"/>
+                                <!--On triche en cachant le input derrière un bouton ayant la même apparence-->
+                                <button class="btn btn-info button-calendar"></button>
                                 <i class="far fa-calendar-alt"></i>
                             </div>
                         </template>
                     </date-picker>
-
-                </div>
+                </div> <!--end of profil-header-->
 
                 <div class="tables-flex-container">
                     <table>
@@ -156,14 +159,13 @@
 
                         <tr class="tr-button-generer-exercices">
                             <div>
-                                <button class="btn btn-primary" @click="handleGenerationExercices(patient.id)">Régénérer
-                                    les exercices
+                                <button class="btn btn-primary" @click="handleGenerationExercices(patient.id)">Générer la config d'exercices
                                 </button>
                             </div>
                         </tr>
 
                     </table>
-                </div>
+                </div> <!--end of tables-flex-container-->
 
                 <div class="actions-buttons">
                     <button class="btn btn-danger bouton-suppression" @click="handleDelete(patient.id)"><i
@@ -182,6 +184,7 @@
   import patientsAPI from '../services/patientsAPI'
   import PatientsAPI from '../services/patientsAPI'
   import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+  import toast from '../services/toast'
 
   export default {
     name: 'PatientProfilePage',
@@ -221,6 +224,7 @@
           await PatientsAPI.delete(patientId)
           this.$router.push({ name: 'patients' })
         } catch (e) {
+          toast.showToast('error',e.toString())
           console.log('error', e)
         }
 
@@ -305,6 +309,11 @@
         color: transparent;
         width: inherit;
         height: inherit;
+        opacity: 0.8;
+    }
+
+    .scale-reduce {
+        transform: scale(0.9);
     }
 
     .calendar-input-wrapper i {

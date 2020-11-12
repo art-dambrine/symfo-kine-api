@@ -46,6 +46,7 @@
 
   import Pagination, { getDataPagination } from '../components/Pagination'
   import PatientsAPI from '../services/patientsAPI'
+  import toast from '../services/toast'
 
   export default {
     name: 'PatientsPage',
@@ -128,6 +129,7 @@
           await PatientsAPI.delete(patientId)
         } catch (e) {
           this.patients = originalPatients
+          toast.showToast('error',e.toString())
           console.log('error', e)
         }
 

@@ -25,6 +25,13 @@ import { routes } from './routes'
 import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
 
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-default.css';
+
+Vue.use(VueToast)
+
+
+
 import { BootstrapVue } from 'bootstrap-vue'
 
 // Install BootstrapVue
