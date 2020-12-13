@@ -168,9 +168,7 @@
                 </div> <!--end of tables-flex-container-->
 
                 <div class="actions-buttons">
-                    <button class="btn btn-danger bouton-suppression" @click="handleDelete(patient.id)"><i
-                            class="fas fa-trash-alt"></i></button>
-                    <button class="btn btn-success">Sauvegarder les informations saisies</button>
+                    <button class="btn btn-success">Sauvegarder les modifications</button>
 
                 </div>
 
@@ -210,24 +208,6 @@
       calcIMC (patient) {
         let IMC = (parseInt(patient.poids) / (Math.pow(parseInt(patient.taille) / 100, 2)))
         return Math.round(IMC * 100) / 100
-      },
-
-      // Gestion de la suppression d'un patient
-      async handleDelete (patientId) {
-
-        // Validation avant suppression
-        let patient = this.patient
-        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient.firstName + ' ' + patient.lastName + ' ?')
-        if (!confirm) return
-
-        try {
-          await PatientsAPI.delete(patientId)
-          this.$router.push({ name: 'patients' })
-        } catch (e) {
-          toast.showToast('error',e.toString())
-          console.log('error', e)
-        }
-
       },
 
       async handleGenerationExercices (patientId) {
