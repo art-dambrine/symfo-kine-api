@@ -19,7 +19,7 @@
             <tbody>
             <tr v-for="patient in paginatedPatients" :key="patient.id">
                 <td>{{patient.id}}</td>
-                <td class="text-center" @click="redirectToPatientProfile(patient)" ><a href="#">{{patient.firstName}} {{patient.lastName}}</a></td>
+                <td class="text-center" ><a @click="redirectToPatientProfile(patient)" class="href-style">{{patient.firstName}} {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
                 <td class="text-center buttons-actions">
                     <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
@@ -163,6 +163,16 @@
 
     .buttons-actions button:first-child{
         flex: 0.4;
+    }
+
+    .href-style{
+        color: #4582ec;
+    }
+
+    .href-style:hover{
+        text-decoration: underline;
+        color: #1559cf;
+        cursor: pointer;
     }
 
 </style>

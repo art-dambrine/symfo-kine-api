@@ -7,14 +7,14 @@ use App\Entity\Patient;
 use App\Entity\PatientConfigExercice;
 use App\Repository\ExerciceRepository;
 use App\Repository\PatientConfigExerciceRepository;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PatientGenerateExercicesConfiguration extends AbstractController
 {
 
     /**
-     * @var ObjectManager
+     * @var EntityManagerInterface
      */
     private $manager;
 
@@ -25,7 +25,7 @@ class PatientGenerateExercicesConfiguration extends AbstractController
 
     private $patientConfigExerciceRepository;
 
-    public function __construct(ObjectManager $manager, ExerciceRepository $exerciceRepository, PatientConfigExerciceRepository $patientConfigExerciceRepository)
+    public function __construct(EntityManagerInterface $manager, ExerciceRepository $exerciceRepository, PatientConfigExerciceRepository $patientConfigExerciceRepository)
     {
         $this->manager = $manager;
         $this->exerciceRepository = $exerciceRepository;

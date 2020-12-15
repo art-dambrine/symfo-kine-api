@@ -33,6 +33,7 @@
     methods : {
       handleLogout() {
         AuthAPI.logout()
+        this.$router.push({ name: 'login'})
       }
     }
   }

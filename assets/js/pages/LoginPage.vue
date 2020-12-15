@@ -52,6 +52,7 @@
 
         try {
           await AuthAPI.authenticate(this.credentials)
+          this.$router.push({ name: 'patients'})
           this.error = ''
         } catch (e) {
           this.error = 'Aucun compte ne possède ce nom d\'utilisateur ou alors les informations sont incorrectes'

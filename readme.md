@@ -166,6 +166,24 @@ https://symfony.com/doc/current/reference/constraints/NotBlank.html
 composer require "lexik/jwt-authentication-bundle"
 ````
 
+Generate keys
+````
+mkdir -p config/jwt
+openssl genrsa -out config/jwt/private.pem -aes256 4096 # (1)
+openssl rsa -pubout -in config/jwt/private.pem -out config/jwt/public.pem # (2)
+````
+
+This will ask you for the JWT_PASSPHRASE
+Will confirm the JWT_PASSPHRASE again
+
+Give read rights on generated key
+````
+cd config/jwt
+sudo chmod 640 private.pem
+sudo chown user:www-data private.pem
+````
+Follow the jwt guide on Github LexikJWTAuth @ GitHub
+
 # Installation de VueJS avec Symfony
 
 ```

@@ -103,22 +103,20 @@ class Patient
     private $did;
 
     /**
-     * @ORM\OneToMany(targetEntity=Fce::class, mappedBy="patient")
-     * @Groups({"patients_read"})
-     */
-    private $fces;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Fevg::class, mappedBy="patient")
-     * @Groups({"patients_read"})
-     */
-    private $fevgs;
-
-    /**
      * @ORM\OneToMany(targetEntity=PatientConfigExercice::class, mappedBy="patient")
      * @Groups({"patients_read"})
      */
     private $exercice;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $fce;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $fevg;
 
 
     public function __construct()
@@ -242,67 +240,6 @@ class Patient
         return $this;
     }
 
-    /**
-     * @return Collection|Fce[]
-     */
-    public function getFces(): Collection
-    {
-        return $this->fces;
-    }
-
-    public function addFce(Fce $fce): self
-    {
-        if (!$this->fces->contains($fce)) {
-            $this->fces[] = $fce;
-            $fce->setPatient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFce(Fce $fce): self
-    {
-        if ($this->fces->contains($fce)) {
-            $this->fces->removeElement($fce);
-            // set the owning side to null (unless already changed)
-            if ($fce->getPatient() === $this) {
-                $fce->setPatient(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Fevg[]
-     */
-    public function getFevgs(): Collection
-    {
-        return $this->fevgs;
-    }
-
-    public function addFevg(Fevg $fevg): self
-    {
-        if (!$this->fevgs->contains($fevg)) {
-            $this->fevgs[] = $fevg;
-            $fevg->setPatient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFevg(Fevg $fevg): self
-    {
-        if ($this->fevgs->contains($fevg)) {
-            $this->fevgs->removeElement($fevg);
-            // set the owning side to null (unless already changed)
-            if ($fevg->getPatient() === $this) {
-                $fevg->setPatient(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|PatientConfigExercice[]
@@ -331,6 +268,30 @@ class Patient
                 $exercice->setPatient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFce(): ?int
+    {
+        return $this->fce;
+    }
+
+    public function setFce(?int $fce): self
+    {
+        $this->fce = $fce;
+
+        return $this;
+    }
+
+    public function getFevg(): ?int
+    {
+        return $this->fevg;
+    }
+
+    public function setFevg(?int $fevg): self
+    {
+        $this->fevg = $fevg;
 
         return $this;
     }

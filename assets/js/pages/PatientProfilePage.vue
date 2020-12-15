@@ -116,7 +116,7 @@
 
                         <!-- Fce -->
                         <tr>
-                            <td>Fce ( {{localeDateString(Date.parse(mostRecentFce.createdAt))}} )</td>
+                            <td>Fce</td>  <!-- this.$router.push({ name: 'patients'}) -->
                             <td>
                                 <div class="form-group my-auto">
                                     <input type="text" class="form-control" id="inputFce" v-model="mostRecentFce.fce">
@@ -126,7 +126,7 @@
 
                         <!-- Fevg -->
                         <tr>
-                            <td>Fevg ( {{localeDateString(Date.parse(mostRecentFevg.createdAt))}} )</td>
+                            <td>Fevg</td>  <!-- this.$router.push({ name: 'patients'}) -->
                             <td>
                                 <div class="form-group my-auto">
                                     <input type="text" class="form-control" id="inputFevg"
@@ -182,7 +182,7 @@
   import patientsAPI from '../services/patientsAPI'
   import PatientsAPI from '../services/patientsAPI'
   import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-  import toast from '../services/toast'
+  // import toast from '../services/toast'
 
   export default {
     name: 'PatientProfilePage',
