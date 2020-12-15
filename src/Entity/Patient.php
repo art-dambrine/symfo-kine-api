@@ -110,11 +110,13 @@ class Patient
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"patients_read"})
      */
     private $fce;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"patients_read"})
      */
     private $fevg;
 

@@ -119,7 +119,7 @@
                             <td>Fce</td>  <!-- this.$router.push({ name: 'patients'}) -->
                             <td>
                                 <div class="form-group my-auto">
-                                    <input type="text" class="form-control" id="inputFce" v-model="mostRecentFce.fce">
+                                    <input type="text" class="form-control" id="inputFce" v-model="patient.fce">
                                 </div>
                             </td>
                         </tr>
@@ -130,7 +130,7 @@
                             <td>
                                 <div class="form-group my-auto">
                                     <input type="text" class="form-control" id="inputFevg"
-                                           v-model="mostRecentFevg.fevg">
+                                           v-model="patient.fevg">
                                 </div>
                             </td>
                         </tr>
@@ -159,7 +159,8 @@
 
                         <tr class="tr-button-generer-exercices">
                             <div>
-                                <button class="btn btn-primary" @click="handleGenerationExercices(patient.id)">Générer la config d'exercices
+                                <button class="btn btn-primary" @click="handleGenerationExercices(patient.id)">Générer
+                                    la config d'exercices
                                 </button>
                             </div>
                         </tr>
@@ -168,8 +169,9 @@
                 </div> <!--end of tables-flex-container-->
 
                 <div class="actions-buttons">
-                    <button class="btn btn-success">Sauvegarder les modifications</button>
-
+                    <button @click="handleSaveDataPatient(patientId)" class="btn btn-success">Sauvegarder les
+                        modifications
+                    </button>
                 </div>
 
             </div>
@@ -182,7 +184,7 @@
   import patientsAPI from '../services/patientsAPI'
   import PatientsAPI from '../services/patientsAPI'
   import DatePicker from 'v-calendar/lib/components/date-picker.umd'
-  // import toast from '../services/toast'
+  import toast from '../services/toast'
 
   export default {
     name: 'PatientProfilePage',
@@ -190,7 +192,8 @@
     data () {
       return {
         patient: null,
-        patientId: this.$route.params.id
+        patientId: this.$route.params.id,
+        dateNaissanceInitiale: ''
       }
     },
     methods: {
@@ -205,9 +208,67 @@
       localeDateString (timestamp) {
         return new Date(timestamp).toLocaleDateString()
       },
+      // Convert timestamp to string date 2020-10-10
+      convertDateForUpdate (timestamp) {
+
+        let dateFormated = new Date(timestamp)
+
+        let year = dateFormated.getFullYear()
+        console.log('annee: ' + year)
+
+        // mounth start at 0 = Jan & end at 11 = Dec
+        let mounth = dateFormated.getMonth() + 1
+        if (mounth < 10) mounth = '0' + mounth
+        console.log('mois: ' + mounth)
+
+        // getDate to get the day in the mounth
+        let day = dateFormated.getDate()
+        if (day < 10) day = '0' + day
+        console.log('jour: ' + day)
+
+        return year + '-' + mounth + '-' + day
+      },
       calcIMC (patient) {
         let IMC = (parseInt(patient.poids) / (Math.pow(parseInt(patient.taille) / 100, 2)))
         return Math.round(IMC * 100) / 100
+      },
+
+      async handleSaveDataPatient (patientId) {
+        try {
+
+          // Gestion du changement de date de naissance
+          if (!this.dateIsUnchanged) {
+            let confirmation = window.confirm('Voulez vous vraiment modifier la date de naissance ? Cela entrainera également la mise à jour du compte du patient...')
+            if (confirmation) {
+              try {
+                let reponseUpdateBirthdate = await PatientsAPI.updateBirthdatePatient(patientId, this.convertDateForUpdate(Date.parse(this.patient.birthdate)))
+                console.log(reponseUpdateBirthdate.data)
+                toast.showToast('success', 'Modifications date de naissance ok.')
+              } catch (e) {
+                toast.showToast('error', 'Erreur dans la mise à jour de la date de naissance.')
+                console.log('error', e)
+              }
+            }
+          }
+
+          let data = '{ ' +
+            '"borg": ' + this.patient.borg + ',' +
+            ' "taille": ' + this.patient.taille + ',' +
+            ' "poids": ' + this.patient.poids + ',' +
+            ' "bbloquant": ' + this.patient.bbloquant + ',' +
+            '  "dnd": ' + this.patient.dnd + ',' +
+            '  "did": ' + this.patient.did + ',' +
+            '  "fce": ' + this.patient.fce + ',' +
+            '  "fevg": ' + this.patient.fevg + '' +
+            '}'
+
+          let response = await PatientsAPI.updateSimpleAttributesPatient(patientId, data)
+          console.log(response.data)
+          toast.showToast('success', 'Modifications enregistrées avec succès.')
+        } catch (e) {
+          toast.showToast('error', 'Erreur dans l\'enregistrement des données.')
+          console.log('error', e)
+        }
       },
 
       async handleGenerationExercices (patientId) {
@@ -222,6 +283,15 @@
       },
       tooglePopOver () {
         document.getElementById('calendar-input').focus()
+      },
+
+      async fetchAndSaveInitialDate () {
+        try {
+          await this.fetchPatient()
+          this.dateNaissanceInitiale = this.patient.birthdate
+        } catch (e) {
+          console.log('error', e)
+        }
       }
     },
     computed: {
@@ -230,24 +300,19 @@
         let dnd = (this.patient.dnd == 1)
         return (!did && !dnd)
       },
-      mostRecentFce () {
-        let recentFce = this.lodash.orderBy(this.patient.fces, 'createdAt', 'desc')[0]
-        if (recentFce == undefined) return 'Fce non définit.'
-        return recentFce
-      },
-      mostRecentFevg () {
-        let recentFevg = this.lodash.orderBy(this.patient.fevgs, 'createdAt', 'desc')[0]
-        if (recentFevg == undefined) return 'Fevg non définit.'
-        return recentFevg
-      },
       date () {
         return this.patient.birthdate
+      },
+      dateIsUnchanged () {
+        if (this.localeDateString(this.patient.birthdate) === this.localeDateString(this.dateNaissanceInitiale))
+          return true
+        else return false
       }
 
     },
     mounted () {
       // Au chargement du composant on charge le profile du patient
-      this.fetchPatient()
+      this.fetchAndSaveInitialDate()
     }
   }
 </script>
