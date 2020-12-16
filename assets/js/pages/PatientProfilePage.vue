@@ -253,12 +253,12 @@
 
           // Gestion du changement des infos de base (TODO: Faire une vérification des champs)
           let data = '{ ' +
-            '"borg": ' + this.patient.borg + ',' +
+            '"borg": ' + (this.patient.borg == undefined ? false : this.patient.borg) + ',' +
             ' "taille": ' + this.patient.taille + ',' +
             ' "poids": ' + this.patient.poids + ',' +
-            ' "bbloquant": ' + this.patient.bbloquant + ',' +
-            '  "dnd": ' + this.patient.dnd + ',' +
-            '  "did": ' + this.patient.did + ',' +
+            ' "bbloquant": ' + (this.patient.bbloquant == undefined ? false : this.patient.bbloquant) + ',' +
+            '  "dnd": ' + (this.patient.dnd == undefined ? false : this.patient.dnd) + ',' +
+            '  "did": ' + (this.patient.did == undefined ? false : this.patient.did) + ',' +
             '  "fce": ' + this.patient.fce + ',' +
             '  "fevg": ' + this.patient.fevg + '' +
             '}'
@@ -266,6 +266,7 @@
           let response = await PatientsAPI.updateSimpleAttributesPatient(patientId, data)
           console.log(response.data)
           toast.showToast('success', 'Modifications enregistrées avec succès.')
+
         } catch (e) {
           toast.showToast('error', 'Erreur dans l\'enregistrement des données.')
           console.log('error', e)
@@ -283,7 +284,8 @@
           try {
             await PatientsAPI.updatePatientUpdateOneExerciceConfig(this.patient.exercice[i].id, JSON.stringify(exercice))
           } catch (e) {
-            toast.showToast('error', 'Erreur dans l\'enregistrement de l\'exercice n°' + i)
+            let num = i+1
+            toast.showToast('error', 'Erreur dans l\'enregistrement de l\'exercice n°' + num)
             console.log('error', e)
           }
         }
