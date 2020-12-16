@@ -16,8 +16,9 @@
                     <b-nav-item :to="{ name: 'login' }">
                         <button class="btn btn-success">Connexion</button>
                     </b-nav-item>
-                    <b-nav-item>
-                        <button @click="handleLogout" class="btn btn-danger">Déconnexion</button>
+                    <b-nav-item v-show="showDeconnexion">
+                        <button @click="handleLogout" class="btn btn-danger">Déconnexion
+                        </button>
                     </b-nav-item>
                 </b-navbar-nav>
             </b-collapse>
@@ -30,11 +31,20 @@
 
   export default {
     name: 'Navbar',
-    methods : {
-      handleLogout() {
+    methods: {
+      handleLogout () {
         AuthAPI.logout()
-        this.$router.push({ name: 'login'})
+        this.$router.push({ name: 'login' })
       }
+    },
+    computed: {
+      showDeconnexion () {
+        if (AuthAPI.storeToken.token === null)
+          return false
+        else
+          return true
+      }
+
     }
   }
 </script>
