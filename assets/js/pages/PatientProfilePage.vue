@@ -243,7 +243,7 @@
               try {
                 let reponseUpdateBirthdate = await PatientsAPI.updateBirthdatePatient(patientId, this.convertDateForUpdate(Date.parse(this.patient.birthdate)))
                 console.log(reponseUpdateBirthdate.data)
-                toast.showToast('success', 'Modifications date de naissance ok.')
+                toast.showToast('success', 'Modification de la date de naissance.')
               } catch (e) {
                 toast.showToast('error', 'Erreur dans la mise à jour de la date de naissance.')
                 console.log('error', e)
@@ -251,6 +251,7 @@
             }
           }
 
+          // Gestion du changement des infos de base (TODO: Faire une vérification des champs)
           let data = '{ ' +
             '"borg": ' + this.patient.borg + ',' +
             ' "taille": ' + this.patient.taille + ',' +
@@ -269,6 +270,24 @@
           toast.showToast('error', 'Erreur dans l\'enregistrement des données.')
           console.log('error', e)
         }
+
+        // Gestion du changement des données d'exercices
+
+        for (let i = 0; i < this.patient.exercice.length; i++) {
+
+          let exercice = {
+            'OneRm': parseInt(this.patient.exercice[i].OneRm),
+            'enabled': this.patient.exercice[i].enabled
+          }
+
+          try {
+            await PatientsAPI.updatePatientUpdateOneExerciceConfig(this.patient.exercice[i].id, JSON.stringify(exercice))
+          } catch (e) {
+            toast.showToast('error', 'Erreur dans l\'enregistrement de l\'exercice n°' + i)
+            console.log('error', e)
+          }
+        }
+
       },
 
       async handleGenerationExercices (patientId) {

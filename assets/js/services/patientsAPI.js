@@ -40,7 +40,6 @@ function deletePatient (id) {
 
 function updateSimpleAttributesPatient (id, data) {
 
-  let axios = require('axios')
   let config = {
     method: 'patch',
     url: process.env.VUE_APP_API_URL + '/api/patients/' + id,
@@ -55,7 +54,6 @@ function updateSimpleAttributesPatient (id, data) {
 
 function updateBirthdatePatient (id, newBirthdate) {
 
-  let axios = require('axios')
   let data = '{"birthdate": "' + newBirthdate + '"}'
 
   let config = {
@@ -88,7 +86,28 @@ function generatePatientExerciceDefaultConfig (id) {
 
 }
 
+function updatePatientUpdateOneExerciceConfig (idConfigExercice, exerciceJson) {
+
+  let data = exerciceJson
+
+  let config = {
+    method: 'patch',
+    url: process.env.VUE_APP_API_URL + '/api/patient_config_exercices/' + idConfigExercice,
+    headers: {
+      'Content-Type': 'application/merge-patch+json'
+    },
+    data: data
+  }
+
+  return axios(config)
+}
+
 export default {
-  findAll, findOne, generatePatientExerciceDefaultConfig, updateSimpleAttributesPatient, updateBirthdatePatient,
+  findAll,
+  findOne,
+  generatePatientExerciceDefaultConfig,
+  updateSimpleAttributesPatient,
+  updateBirthdatePatient,
+  updatePatientUpdateOneExerciceConfig,
   delete: deletePatient
 }
