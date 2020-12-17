@@ -28,6 +28,7 @@
 
 <script>
   import AuthAPI from '../services/authAPI'
+  import axios from "axios"
 
   export default {
     name: 'Navbar',
@@ -45,6 +46,11 @@
           return true
       }
 
+    },
+    mounted() {
+      // On prévient axios qu'on aura maintenant un header par défaut sur toutes nos futures requêtes HTTP
+      axios.defaults.headers.common["Authorization"] = "Bearer " + window.localStorage.getItem("authToken")
+      AuthAPI.storeToken.token = window.localStorage.getItem("authToken")
     }
   }
 </script>

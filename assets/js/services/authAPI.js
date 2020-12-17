@@ -8,7 +8,7 @@ const storeToken = Vue.observable({
 
 function logout () {
   window.localStorage.removeItem("authToken")
-  delete axios.defaults.headers["Authorization"]
+  delete axios.defaults.headers.common["Authorization"]
   // Mise à jour du token dans le store observable
   storeToken.token = null
 }
@@ -34,7 +34,7 @@ function authenticate (credentials) {
       // Mise à jour du token dans le store observable
       storeToken.token = token
       // On prévient axios qu'on aura maintenant un header par défaut sur toutes nos futures requêtes HTTP
-      axios.defaults.headers["Authorization"] = "Bearer " + token
+      axios.defaults.headers.common["Authorization"] = "Bearer " + token
 
       return true
     })
