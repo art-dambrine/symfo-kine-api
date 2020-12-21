@@ -208,3 +208,8 @@ $ npm run dev-server
 ```
 $ npm run build
 ```
+
+
+# Notes sur le developpement
+
+Historisation des données patient et 1RM inspirée de https://github.com/XSiraudin/doctrine-orm-history-bundle

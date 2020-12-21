@@ -6,6 +6,7 @@ namespace App\Events;
 
 use ApiPlatform\Core\EventListener\EventPriorities;
 use App\Entity\Patient;
+use App\Entity\History;
 use App\Repository\PatientRepository;
 use Doctrine\DBAL\Driver\Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class PatientUpdateCaracteristicSubscriber implements EventSubscriberInterface
      * */
     private $entityManager;
 
+
     public function __construct(PatientRepository $patientRepository, EntityManagerInterface $entityManager)
     {
         $this->patientRepository = $patientRepository;
@@ -34,7 +36,6 @@ class PatientUpdateCaracteristicSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        // TODO: Implement getSubscribedEvents() method.
         return [
             KernelEvents::VIEW => ['updateHistoryUpdatePatient', EventPriorities::PRE_WRITE]
         ];
@@ -53,7 +54,7 @@ class PatientUpdateCaracteristicSubscriber implements EventSubscriberInterface
              * */
 
             $conn = $this->entityManager->getConnection();
-            $sql = 'SELECT * FROM patient WHERE patient.id = :id';
+            $sql = "SELECT * FROM patient WHERE patient.id = :id";
             $patientBaseBeforeUpdate = [];
 
             try {
@@ -71,21 +72,41 @@ class PatientUpdateCaracteristicSubscriber implements EventSubscriberInterface
             $fceOld = $patientBaseBeforeUpdate[0]["fce"];
             $fevgOld = $patientBaseBeforeUpdate[0]["fevg"];
 
-            // TODO : comparer les différences sur les elements poids, fce, fevg
             // 2. comparaison des elements avec le contenu de la requête PATCH
             if ($poidsOld != $patient->getPoids()) {
-                dd("Poids différent avec base", $poidsOld, $patient->getTaille());
-                // TODO : faire la requête de sauvegarde dans la table historique
+                // dd("Poids différent avec base", $poidsOld, $patient->getTaille());
+                $history = new History();
+                $history->setIdFk($patient->getId())
+                    ->setOldValue($poidsOld)
+                    ->setNewValue($patient->getPoids())
+                    ->setCreatedAt(new \DateTime())
+                    ->setEntityClass("Patient")
+                    ->setPropertyName("poids");
+                $this->entityManager->persist($history);
             }
 
             if ($fceOld != $patient->getFce()) {
                 // dd("FCE différent avec base",$fceOld, $patient->getFce());
-                // TODO : faire la requête de sauvegarde dans la table historique
+                $history = new History();
+                $history->setIdFk($patient->getId())
+                    ->setOldValue($fceOld)
+                    ->setNewValue($patient->getFce())
+                    ->setCreatedAt(new \DateTime())
+                    ->setEntityClass("Patient")
+                    ->setPropertyName("fce");
+                $this->entityManager->persist($history);
             }
 
             if ($fevgOld != $patient->getFevg()) {
                 // dd("FEVG différent avec base",$fevgOld, $patient->getFevg());
-                // TODO : faire la requête de sauvegarde dans la table historique
+                $history = new History();
+                $history->setIdFk($patient->getId())
+                    ->setOldValue($fevgOld)
+                    ->setNewValue($patient->getFevg())
+                    ->setCreatedAt(new \DateTime())
+                    ->setEntityClass("Patient")
+                    ->setPropertyName("fevg");
+                $this->entityManager->persist($history);
             }
 
         }
