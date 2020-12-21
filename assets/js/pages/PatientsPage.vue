@@ -1,6 +1,11 @@
 <template>
     <div>
-        <h1>Liste des patients</h1>
+        <div class="head-patient-page">
+            <h1 class="d-inline">Liste des patients</h1>
+            <button @click="redirectToPatientCreate()" class="btn btn-sm btn-outline-primary"><span
+                    class="plus-bold">+</span> nouveau patient
+            </button>
+        </div>
 
         <div class="form-group">
             <input type="text" v-model="search" class="form-control" placeholder="Rechercher...">
@@ -19,7 +24,8 @@
             <tbody>
             <tr v-for="patient in paginatedPatients" :key="patient.id">
                 <td>{{patient.id}}</td>
-                <td class="text-center" ><a @click="redirectToPatientProfile(patient)" class="href-style">{{patient.firstName}} {{patient.lastName}}</a></td>
+                <td class="text-center"><a @click="redirectToPatientProfile(patient)" class="href-style">{{patient.firstName}}
+                    {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
                 <td class="text-center buttons-actions">
                     <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
@@ -116,9 +122,8 @@
 
         // Validation avant suppression
         let patient = this.patients.filter(patient => patient.id == patientId)
-        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient[0].firstName + " " + patient[0].lastName + ' ?')
+        let confirm = window.confirm('Voulez vous vraiment supprimer le profil de ' + patient[0].firstName + ' ' + patient[0].lastName + ' ?')
         if (!confirm) return
-
 
         let originalPatients = [...this.patients]
 
@@ -129,7 +134,7 @@
           await PatientsAPI.delete(patientId)
         } catch (e) {
           this.patients = originalPatients
-          toast.showToast('error',e.toString())
+          toast.showToast('error', e.toString())
           console.log('error', e)
         }
 
@@ -140,6 +145,10 @@
 
       redirectToPatientProfile (patient) {
         this.$router.push({ name: 'patient', params: { id: patient.id } })
+      },
+
+      redirectToPatientCreate () {
+        this.$router.push({ name: 'patientCreate' })
       }
 
     },
@@ -152,24 +161,40 @@
 
 <style scoped>
 
-    .buttons-actions{
+    .head-patient-page {
+        display: flex;
+        align-items: center;
+    }
+
+    .head-patient-page button {
+        margin-left: 20px;
+        font-size: 1.1em;
+        padding: 0 20px;
+    }
+
+    .plus-bold {
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .buttons-actions {
         display: flex;
         justify-content: space-evenly;
     }
 
-    .buttons-actions button{
+    .buttons-actions button {
         padding: 0.35rem 0.6rem;
     }
 
-    .buttons-actions button:first-child{
+    .buttons-actions button:first-child {
         flex: 0.4;
     }
 
-    .href-style{
+    .href-style {
         color: #4582ec;
     }
 
-    .href-style:hover{
+    .href-style:hover {
         text-decoration: underline;
         color: #1559cf;
         cursor: pointer;
