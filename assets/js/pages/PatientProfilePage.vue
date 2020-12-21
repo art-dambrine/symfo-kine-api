@@ -259,8 +259,8 @@
             ' "bbloquant": ' + (this.patient.bbloquant == undefined ? false : this.patient.bbloquant) + ',' +
             '  "dnd": ' + (this.patient.dnd == undefined ? false : this.patient.dnd) + ',' +
             '  "did": ' + (this.patient.did == undefined ? false : this.patient.did) + ',' +
-            '  "fce": ' + this.patient.fce + ',' +
-            '  "fevg": ' + this.patient.fevg + '' +
+            '  "fce": ' + (this.patient.fce == undefined ? null : this.patient.fce) + ',' +
+            '  "fevg": ' + (this.patient.fevg == undefined ? null : this.patient.fevg) + '' +
             '}'
 
           let response = await PatientsAPI.updateSimpleAttributesPatient(patientId, data)

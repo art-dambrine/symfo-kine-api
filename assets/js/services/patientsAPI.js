@@ -26,6 +26,38 @@ function findOne (id) {
 
 }
 
+function createPatient (data) {
+  let axios = require('axios')
+
+  let config = {
+    method: 'post',
+    url: process.env.VUE_APP_API_URL + '/api/patients',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  }
+
+  return axios(config)
+}
+
+function createPatientAccount (id) {
+  let axios = require('axios')
+  let data = JSON.stringify({ 'patient': 'api/patients/' + id })
+
+  let config = {
+    method: 'post',
+    url: process.env.VUE_APP_API_URL + '/api/users',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  }
+
+  return axios(config)
+
+}
+
 function deletePatient (id) {
 
   let config = {
@@ -105,6 +137,8 @@ function updatePatientUpdateOneExerciceConfig (idConfigExercice, exerciceJson) {
 export default {
   findAll,
   findOne,
+  createPatient,
+  createPatientAccount,
   generatePatientExerciceDefaultConfig,
   updateSimpleAttributesPatient,
   updateBirthdatePatient,
