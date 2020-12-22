@@ -43,6 +43,7 @@
   import patientsAPI from '../services/patientsAPI'
   import toast from '../services/toast'
   import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+  import dates from '../services/dates'
 
   export default {
     name: 'PatientCreatePage',
@@ -84,33 +85,15 @@
 
       },
 
-      // Conversion d'un timestamp au format de date locale
-      localeDateString (timestamp) {
-        let date = new Date(timestamp)
-        let mounth = date.getMonth() + 1
-        return '' + date.getDate() + '/' + mounth + '/' + date.getFullYear()
-      },
-
       // Convert timestamp to string date 2020-10-10
       convertDateForUpdate (timestamp) {
-
-        let dateFormated = new Date(timestamp)
-
-        let year = dateFormated.getFullYear()
-        console.log('annee: ' + year)
-
-        // mounth start at 0 = Jan & end at 11 = Dec
-        let mounth = dateFormated.getMonth() + 1
-        if (mounth < 10) mounth = '0' + mounth
-        console.log('mois: ' + mounth)
-
-        // getDate to get the day in the mounth
-        let day = dateFormated.getDate()
-        if (day < 10) day = '0' + day
-        console.log('jour: ' + day)
-
-        return year + '-' + mounth + '-' + day
+        return dates.convertDateForUpdate(timestamp)
+      },
+      // Conversion d'un timestamp au format de date locale
+      localeDateString (timestamp) {
+        return dates.localeDateString(timestamp)
       }
+
     }
   }
 </script>

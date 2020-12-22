@@ -185,6 +185,7 @@
   import PatientsAPI from '../services/patientsAPI'
   import DatePicker from 'v-calendar/lib/components/date-picker.umd'
   import toast from '../services/toast'
+  import dates from '../services/dates'
 
   export default {
     name: 'PatientProfilePage',
@@ -206,28 +207,13 @@
       },
       // Conversion d'un timestamp au format de date locale
       localeDateString (timestamp) {
-        return new Date(timestamp).toLocaleDateString()
+        return dates.localeDateString(timestamp)
       },
       // Convert timestamp to string date 2020-10-10
       convertDateForUpdate (timestamp) {
-
-        let dateFormated = new Date(timestamp)
-
-        let year = dateFormated.getFullYear()
-        console.log('annee: ' + year)
-
-        // mounth start at 0 = Jan & end at 11 = Dec
-        let mounth = dateFormated.getMonth() + 1
-        if (mounth < 10) mounth = '0' + mounth
-        console.log('mois: ' + mounth)
-
-        // getDate to get the day in the mounth
-        let day = dateFormated.getDate()
-        if (day < 10) day = '0' + day
-        console.log('jour: ' + day)
-
-        return year + '-' + mounth + '-' + day
+        return dates.convertDateForUpdate(timestamp)
       },
+
       calcIMC (patient) {
         let IMC = (parseInt(patient.poids) / (Math.pow(parseInt(patient.taille) / 100, 2)))
         return Math.round(IMC * 100) / 100
@@ -284,7 +270,7 @@
           try {
             await PatientsAPI.updatePatientUpdateOneExerciceConfig(this.patient.exercice[i].id, JSON.stringify(exercice))
           } catch (e) {
-            let num = i+1
+            let num = i + 1
             toast.showToast('error', 'Erreur dans l\'enregistrement de l\'exercice n°' + num)
             console.log('error', e)
           }
