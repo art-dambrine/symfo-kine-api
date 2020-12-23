@@ -220,8 +220,8 @@
       },
 
       isEmptyOrSpaces (str) {
-        if (str === undefined) str = ''
-        return str === null || str.match(/^\s*$/) !== null
+        if (str === undefined || str === null) str = ''
+        return str.match(/^\s*$/) !== null
       },
 
       async handleSaveDataPatient (patientId) {
