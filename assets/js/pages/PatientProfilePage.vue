@@ -220,7 +220,7 @@
       },
 
       isEmptyOrSpaces (str) {
-        if (str === undefined || str === null) str = ''
+        if (str === undefined || str === null) str = ' '
         return str.match(/^\s*$/) !== null
       },
 
