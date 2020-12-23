@@ -219,6 +219,11 @@
         return Math.round(IMC * 100) / 100
       },
 
+      isEmptyOrSpaces (str) {
+        if (str === undefined) str = ''
+        return str === null || str.match(/^\s*$/) !== null
+      },
+
       async handleSaveDataPatient (patientId) {
         try {
 
@@ -237,16 +242,22 @@
             }
           }
 
-          // Gestion du changement des infos de base (TODO: Faire une vérification des champs)
+          // Gestion du changement des infos de base
+
+          if (this.isEmptyOrSpaces(this.patient.taille)) this.patient.taille = null
+          if (this.isEmptyOrSpaces(this.patient.poids)) this.patient.poids = null
+          if (this.isEmptyOrSpaces(this.patient.fce)) this.patient.fce = null
+          if (this.isEmptyOrSpaces(this.patient.fevg)) this.patient.fevg = null
+
           let data = '{ ' +
-            '"borg": ' + (this.patient.borg == undefined ? false : this.patient.borg) + ',' +
-            ' "taille": ' + this.patient.taille + ',' +
-            ' "poids": ' + this.patient.poids + ',' +
-            ' "bbloquant": ' + (this.patient.bbloquant == undefined ? false : this.patient.bbloquant) + ',' +
-            '  "dnd": ' + (this.patient.dnd == undefined ? false : this.patient.dnd) + ',' +
-            '  "did": ' + (this.patient.did == undefined ? false : this.patient.did) + ',' +
-            '  "fce": ' + (this.patient.fce == undefined ? null : this.patient.fce) + ',' +
-            '  "fevg": ' + (this.patient.fevg == undefined ? null : this.patient.fevg) + '' +
+            '"borg": ' + (this.patient.borg === undefined ? false : this.patient.borg) + ',' +
+            ' "taille": ' + (this.patient.taille === undefined ? null : this.patient.taille) + ',' +
+            ' "poids": ' + (this.patient.poids === undefined ? null : this.patient.poids) + ',' +
+            ' "bbloquant": ' + (this.patient.bbloquant === undefined ? false : this.patient.bbloquant) + ',' +
+            '  "dnd": ' + (this.patient.dnd === undefined ? false : this.patient.dnd) + ',' +
+            '  "did": ' + (this.patient.did === undefined ? false : this.patient.did) + ',' +
+            '  "fce": ' + (this.patient.fce === undefined ? null : this.patient.fce) + ',' +
+            '  "fevg": ' + (this.patient.fevg === undefined ? null : this.patient.fevg) + '' +
             '}'
 
           let response = await PatientsAPI.updateSimpleAttributesPatient(patientId, data)
@@ -254,7 +265,7 @@
           toast.showToast('success', 'Modifications enregistrées avec succès.')
 
         } catch (e) {
-          toast.showToast('error', 'Erreur dans l\'enregistrement des données.')
+          toast.showToast('error', 'Erreur dans l\'enregistrement des attributs.')
           console.log('error', e)
         }
 
@@ -303,17 +314,13 @@
     },
     computed: {
       diabete () {
-        let did = (this.patient.did == 1)
-        let dnd = (this.patient.dnd == 1)
-        return (!did && !dnd)
+        return (!this.patient.did && !this.patient.dnd)
       },
       date () {
         return this.patient.birthdate
       },
       dateIsUnchanged () {
-        if (this.localeDateString(this.patient.birthdate) === this.localeDateString(this.dateNaissanceInitiale))
-          return true
-        else return false
+        return this.localeDateString(this.patient.birthdate) === this.localeDateString(this.dateNaissanceInitiale)
       }
 
     },
@@ -446,10 +453,6 @@
     .actions-buttons button {
         font-size: 0.9em;
         padding: 12px;
-    }
-
-    .bouton-suppression {
-        padding: 0.6rem 1.5rem !important;
     }
 
 

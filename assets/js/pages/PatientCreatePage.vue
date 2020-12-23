@@ -2,17 +2,19 @@
     <div>
         <h1>Création d'un nouveau patient</h1>
         <form>
-            <div class="form-group">
-                <label for="inputName">Nom</label>
-                <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp"
-                       placeholder="Saisie du nom." v-model="nom">
-                <small id="inputNameHelp" class="form-text text-muted">Saisir le nom du patient.</small>
-            </div>
+
             <div class="form-group">
                 <label for="inputPrenom">Prenom</label>
                 <input type="text" class="form-control" id="inputPrenom" placeholder="Saisie du prenom."
                        v-model="prenom">
                 <small id="inputPrenomHelp" class="form-text text-muted">Saisir le prenom du patient.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="inputName">Nom</label>
+                <input type="text" class="form-control" id="inputName" aria-describedby="emailHelp"
+                       placeholder="Saisie du nom." v-model="nom">
+                <small id="inputNameHelp" class="form-text text-muted">Saisir le nom du patient.</small>
             </div>
 
             <date-picker v-model="birthdate">
@@ -22,7 +24,7 @@
                         <input class="form-control" id="inputDate"
                                placeholder="Cliquer dans le champ pour selectionner."
                                v-on="inputEvents"
-                               v-bind:value="(birthdate == '' ? '' : localeDateString(Date.parse(birthdate)))"/>
+                               v-bind:value="(birthdate === '' ? '' : localeDateString(Date.parse(birthdate)))"/>
                         <small id="inputDateHelp" class="form-text text-muted">
                             Entrer la date de naissance du patient.</small>
                     </div>
@@ -52,15 +54,15 @@
       return {
         nom: '',
         prenom: '',
-        birthdate: ''
+        birthdate: '01/01/1990'
       }
     },
     methods: {
       async postNewPatientAndCreateAccount () {
         let data = JSON.stringify(
           {
-            'firstName': this.nom,
-            'lastName': this.prenom,
+            'firstName': this.prenom,
+            'lastName': this.nom,
             'birthdate': this.convertDateForUpdate(Date.parse(this.birthdate))
           }
         )
@@ -68,15 +70,19 @@
         try {
           let response = await patientsAPI.createPatient(data)
           let newPatientId = response.data.id
-          toast.showToast('success', 'Patient ' + newPatientId + ' créé.')
-
           try {
             console.log(newPatientId)
             let response = await patientsAPI.createPatientAccount(newPatientId)
-            toast.showToast('success', 'Compte du patient créé.')
+            toast.showToast('success', 'Compte de ' + this.prenom + ' ' + this.nom + ' créé.')
             console.log(response)
           } catch (e) {
-            toast.showToast('error', 'Erreur dans la création du compte. ' + e.response.data['hydra:description'])
+            toast.showToast('error', 'Erreur création compte : ' + e.response.data['hydra:description'])
+            try {
+              await patientsAPI.delete(newPatientId)
+              toast.showToast('info', 'Création patient annulée.')
+            } catch (e) {
+              toast.showToast('error', 'Erreur annulation : ' + e.response.data['hydra:description'])
+            }
           }
 
         } catch (e) {
