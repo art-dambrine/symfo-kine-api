@@ -235,6 +235,7 @@
                 let reponseUpdateBirthdate = await PatientsAPI.updateBirthdatePatient(patientId, this.convertDateForUpdate(Date.parse(this.patient.birthdate)))
                 console.log(reponseUpdateBirthdate.data)
                 toast.showToast('success', 'Modification de la date de naissance.')
+                this.dateNaissanceInitiale = this.patient.birthdate
               } catch (e) {
                 toast.showToast('error', 'Erreur dans la mise à jour de la date de naissance.')
                 console.log('error', e)
