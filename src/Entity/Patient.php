@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Annotation\ApiSubresource;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -33,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     },
  *     denormalizationContext={"disable_type_enforcement"=false}
  * )
+ * @ApiFilter(BooleanFilter::class, properties={"archived"})
  */
 class Patient
 {
@@ -119,6 +122,12 @@ class Patient
      * @Groups({"patients_read"})
      */
     private $fevg;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true, options={"default" : false})
+     * @Groups({"patients_read"})
+     */
+    private $archived = false;
 
 
     public function __construct()
@@ -294,6 +303,18 @@ class Patient
     public function setFevg(?int $fevg): self
     {
         $this->fevg = $fevg;
+
+        return $this;
+    }
+
+    public function getArchived(): ?bool
+    {
+        return $this->archived;
+    }
+
+    public function setArchived(?bool $archived): self
+    {
+        $this->archived = $archived;
 
         return $this;
     }

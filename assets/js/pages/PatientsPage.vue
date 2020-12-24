@@ -7,6 +7,14 @@
             </button>
         </div>
 
+        <div class="form-group display-archive-form">
+            <label for="toggleArchived">Afficher les patients archivés. </label>
+            <toggle-button id="toggleArchived"
+                           class="my-auto" v-model="displayArchived"
+                           :sync="true"
+                           :labels="{checked: 'Oui', unchecked: 'Non'}"/>
+        </div>
+
         <div class="form-group">
             <input type="text" v-model="search" class="form-control" placeholder="Rechercher...">
         </div>
@@ -24,12 +32,18 @@
             <tbody>
             <tr v-for="patient in paginatedPatients" :key="patient.id">
                 <td>{{patient.id}}</td>
-                <td class="text-center"><a @click="redirectToPatientProfile(patient)" class="href-style">{{patient.firstName}}
+                <td class="text-center"><a @click="redirectToPatientProfile(patient)"
+                                           v-bind:class="{ 'href-style' : !displayArchived,'href-style disabled': displayArchived  }">{{patient.firstName}}
                     {{patient.lastName}}</a></td>
                 <td class="text-center">{{localeDateString(Date.parse(patient.birthdate))}}</td>
                 <td class="text-center buttons-actions">
-                    <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary">Afficher</button>
-                    <button class="btn btn-sm btn-danger" :disabled="patient.totalRepetition > 0"
+                    <button @click="redirectToPatientProfile(patient)" class="btn btn-sm btn-primary"
+                            :disabled="displayArchived==true">Afficher
+                    </button>
+                    <button class="btn btn-sm btn-info"
+                            @click="handleArchive(patient.id)"><i class="fas fa-archive"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger"
                             @click="handleDelete(patient.id)"><i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -62,7 +76,8 @@
         patients: null,
         currentPage: 1,
         itemsPerPage: 8,
-        search: ''
+        search: '',
+        displayArchived: false
       }
     },
     computed: {
@@ -99,14 +114,18 @@
       // On ramène l'utilisateur à la page 1 à chaque modification de 'search'
       search: function () {
         this.currentPage = 1
+      },
+      // whenever displayArchived changes, this function will run
+      displayArchived: function () {
+        this.fetchPatients(this.displayArchived)
       }
     },
     methods: {
 
-      // Permet de récupérer les patients
-      async fetchPatients () {
+      // Permet de récupérer les patients (archived = true or false)
+      async fetchPatients (archived) {
         try {
-          this.patients = await PatientsAPI.findAll()
+          this.patients = await PatientsAPI.findAll(archived)
         } catch (e) {
           console.log('error', e)
         }
@@ -140,6 +159,26 @@
 
       },
 
+      // Gestion de l'archivage d'un patient
+      async handleArchive (patientId) {
+
+        let originalPatients = [...this.patients]
+
+        // ASTUCE: retire dynamiquement le patient au clic sur "supprimer" (approche optimiste)
+        this.patients = this.patients.filter(patient => patient.id != patientId)
+
+        try {
+          await PatientsAPI.archive(patientId, !this.displayArchived)
+          if (this.displayArchived) toast.showToast('info', 'Patient retiré des archives.')
+          else toast.showToast('info', 'Patient archivé.')
+        } catch (e) {
+          this.patients = originalPatients
+          toast.showToast('error', e.toString())
+          console.log('error', e)
+        }
+
+      },
+
       //Gestion du changement de page
       handlePageChange (page) { this.currentPage = page},
 
@@ -154,7 +193,7 @@
     },
     mounted () {
       // Au chargement du composant, on va chercher les patients
-      this.fetchPatients()
+      this.fetchPatients(false)
     }
   }
 </script>
@@ -177,6 +216,15 @@
         font-size: 1.2em;
     }
 
+    .display-archive-form {
+        display: flex;
+        align-items: center;
+    }
+
+    .display-archive-form label {
+        margin: 0 10px 0 0;
+    }
+
     .buttons-actions {
         display: flex;
         justify-content: space-evenly;
@@ -194,10 +242,18 @@
         color: #4582ec;
     }
 
+    .href-style.disabled {
+        color: #414444;
+    }
+
     .href-style:hover {
         text-decoration: underline;
         color: #1559cf;
         cursor: pointer;
+    }
+
+    .href-style.disabled:hover {
+        color: #414444;
     }
 
 </style>

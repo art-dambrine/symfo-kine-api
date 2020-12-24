@@ -1,10 +1,15 @@
 import axios from 'axios'
 
-function findAll () {
+function findAll (archived) {
+  let suffix = ''
+  if (archived != undefined) {
+    if (archived == true) suffix = '?archived=true'
+    if (archived == false) suffix = '?archived=false'
+  }
 
   let config = {
     method: 'get',
-    url: process.env.VUE_APP_API_URL + '/api/patients',
+    url: process.env.VUE_APP_API_URL + '/api/patients' + suffix,
     headers: {}
   }
 
@@ -64,6 +69,24 @@ function deletePatient (id) {
     method: 'delete',
     url: process.env.VUE_APP_API_URL + '/api/patients/' + id,
     headers: {}
+  }
+
+  return axios(config)
+
+}
+
+function archivePatient (id, archived) {
+
+  let axios = require('axios')
+  let data = JSON.stringify({ 'archived': archived })
+
+  let config = {
+    method: 'patch',
+    url: process.env.VUE_APP_API_URL + '/api/patients/' + id,
+    headers: {
+      'Content-Type': 'application/merge-patch+json'
+    },
+    data: data
   }
 
   return axios(config)
@@ -143,5 +166,6 @@ export default {
   updateSimpleAttributesPatient,
   updateBirthdatePatient,
   updatePatientUpdateOneExerciceConfig,
-  delete: deletePatient
+  delete: deletePatient,
+  archive: archivePatient
 }
