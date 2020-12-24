@@ -117,6 +117,7 @@
       },
       // whenever displayArchived changes, this function will run
       displayArchived: function () {
+        this.patients = null
         this.fetchPatients(this.displayArchived)
       }
     },
