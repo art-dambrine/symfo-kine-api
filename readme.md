@@ -214,3 +214,15 @@ $ npm run build
 # Notes sur le developpement
 
 Historisation des données patient et 1RM inspirée de https://github.com/XSiraudin/doctrine-orm-history-bundle
+
+
+# Deploiement auto
+```shell
+docker-compose up -d --build
+docker-compose exec php composer install
+docker-compose exec php php bin/console doctrine:schema:create
+docker-compose exec php php bin/console doctrine:fixtures:load
+```
+```sql
+INSERT INTO user VALUES(null,null,'kine','["ROLE_ADMIN"]','$argon2id$v=19$m=65536,t=4,p=1$FQbKMNOe1pKdt/b7RlDk8A$egL+vKLNfTp5ocZcOAZqXLO80ntcorYZm015niwOMCc');
+```

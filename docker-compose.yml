@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  mariadb:
+    image: mariadb
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: root    
+      MYSQL_USER: kine
+      MYSQL_PASSWORD: kine
+      MYSQL_DATABASE: kine
+
+  nginx:
+    image: nginx:1.19-alpine
+    restart: on-failure
+    volumes:
+      - './public/:/usr/src/app'
+      - './docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro'
+    ports:
+      - '80:80'
+    depends_on:
+      - php
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - '.:/usr/src/app'
+    restart: on-failure
+    env_file:
+      - .env.local
+    user: 1000:1000
